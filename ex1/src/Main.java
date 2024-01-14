@@ -96,8 +96,10 @@ public class Main {
             /**************************/
             file_writer.close();
         } catch (Exception e) {
-            try (PrintWriter printwriter = new PrintWriter(outputFilename)){
-                printwriter.println("ERROR");
+            try { // overwrite the file with "ERROR"
+                PrintWriter f_writer = new PrintWriter(outputFilename);
+                f_writer.println("ERROR");
+                f_writer.close();
             }
             catch (IOException e2){
                 System.out.println("Error writing to output file");
