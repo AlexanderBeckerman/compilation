@@ -53,27 +53,25 @@ public class Main {
                 switch (token_id) {
                     case TokenNames.INT:
                         int_value = (Integer) s.value;
-						if(int_value > 32767 || int_value < -32767)
+                        if (int_value > 32767 || int_value < -32767)
                             throw new Exception();
-						break;
-					case TokenNames.STRING:
-					case TokenNames.ID:
-						str_value = (String) s.value;
+                        break;
+                    case TokenNames.STRING:
+                    case TokenNames.ID:
+                        str_value = (String) s.value;
                         break;
                     case TokenNames.BAD_COMMENT:
                         throw new Exception();
-					default:
+                    default:
                         break;
                 }
 
                 file_writer.print(token_name);
-                if(token_name.equals("INT")){
+                if (token_name.equals("INT")) {
                     file_writer.print("(" + int_value + ")");
-                }
-                else if (token_name.equals("STRING")) {
+                } else if (token_name.equals("STRING")) {
                     file_writer.print("(\"" + str_value + "\")");
-                }
-                else if (token_name.equals("ID")){
+                } else if (token_name.equals("ID")) {
                     file_writer.print("(" + str_value + ")");
                 }
                 file_writer.print("[");
@@ -100,14 +98,20 @@ public class Main {
             /**************************/
             file_writer.close();
         } catch (Exception e) {
-            try { // overwrite the file with "ERROR"
-                PrintWriter f_writer = new PrintWriter(outputFilename);
-                f_writer.println("ERROR");
-                f_writer.close();
-            }
-            catch (IOException e2){
-                System.out.println("Error writing to output file");
-            }
+            handleException(outputFilename);
+        } catch (java.lang.Error e) {
+            handleException(outputFilename);
+        }
+
+    }
+
+    private static void handleException(String outputFilename) {
+        try { // overwrite the file with "ERROR"
+            PrintWriter f_writer = new PrintWriter(outputFilename);
+            f_writer.println("ERROR");
+            f_writer.close();
+        } catch (IOException e2) {
+            System.out.println("Error writing to output file");
         }
     }
 
