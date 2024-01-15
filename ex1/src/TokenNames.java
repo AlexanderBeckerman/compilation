@@ -32,8 +32,9 @@ public interface TokenNames {
   public static final int NEW = 29;
   public static final int INT = 30;
   public static final int STRING = 31;
+  public static final int COMMENT_ONE = 32;
   public static final String[] names = {"EOF", "PLUS", "MINUS", "TIMES", "DIVIDE", "LPAREN", "RPAREN", "TYPE_STRING", "ID", "LBRACK", "RBRACK", "LBRACE", "RBRACE", "NIL", "COMMA", "DOT",
-          "SEMICOLON", "TYPE_INT", "TYPE_VOID", "ASSIGN", "EQ", "LT", "GT", "ARRAY", "CLASS", "EXTENDS", "RETURN", "WHILE", "IF", "NEW", "INT", "STRING"};
+          "SEMICOLON", "TYPE_INT", "TYPE_VOID", "ASSIGN", "EQ", "LT", "GT", "ARRAY", "CLASS", "EXTENDS", "RETURN", "WHILE", "IF", "NEW", "INT", "STRING", "COMMENT_ONE"};
 
 
 }
