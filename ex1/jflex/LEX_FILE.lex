@@ -103,8 +103,10 @@ IF					= if
 INT					= 0 | [1-9][0-9]*
 ID					= [a-zA-Z]+[a-zA-Z0-9]*
 STRING				= [\"][a-zA-Z][\"]
-COMMENT_ONE_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
-COMMENT_ONE			= [/][/]{COMMENT_ONE_CHARS}*{LineTerminator}
+COMMENT_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
+COMMENT_ONE			= [/][/]{COMMENT_CHARS}*{LineTerminator}
+COMMENT_TWO         = [/][\*]({COMMENT_CHARS} | {LineTerminator})*[\*][/]
+BAD_COMMENT         = [/][\*]
 
 
 /******************************/
@@ -128,6 +130,8 @@ COMMENT_ONE			= [/][/]{COMMENT_ONE_CHARS}*{LineTerminator}
 {LineTerminator}	{}
 {WhiteSpace}		{}
 {COMMENT_ONE}		{}
+{COMMENT_TWO}       {}
+{BAD_COMMENT}       { return symbol(TokenNames.BAD_COMMENT);}
 {LPAREN}			{ return symbol(TokenNames.LPAREN);}
 {RPAREN}			{ return symbol(TokenNames.RPAREN);}
 {LBRACK}			{ return symbol(TokenNames.LBRACK);}

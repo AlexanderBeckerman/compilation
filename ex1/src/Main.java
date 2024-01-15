@@ -60,6 +60,8 @@ public class Main {
 					case TokenNames.ID:
 						str_value = (String) s.value;
                         break;
+                    case TokenNames.BAD_COMMENT:
+                        throw new Exception();
 					default:
                         break;
                 }
