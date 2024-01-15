@@ -68,8 +68,11 @@ public class Main {
                 if(token_name.equals("INT")){
                     file_writer.print("(" + int_value + ")");
                 }
-                else if (token_name.equals("ID") || token_name.equals("STRING")) {
+                else if (token_name.equals("STRING")) {
                     file_writer.print("(\"" + str_value + "\")");
+                }
+                else if (token_name.equals("ID")){
+                    file_writer.print("(" + str_value + ")");
                 }
                 file_writer.print("[");
                 file_writer.print(line_number);
