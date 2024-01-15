@@ -104,7 +104,8 @@ INT				= 0 | [1-9][0-9]*
 ID				= [a-zA-Z]+[a-zA-Z0-9]*
 STRING			= [\"][a-zA-Z][\"]
 COMMENT1_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | WhiteSpace
-COMMENT1		= \\(COMMENT1_CHARS)*LineTerminator
+COMMENT1		= //(COMMENT1_CHARS)*LineTerminator
+
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
