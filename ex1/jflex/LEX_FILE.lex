@@ -70,41 +70,41 @@ import java_cup.runtime.*;
 /***********************/
 /* MACRO DECALARATIONS */
 /***********************/
-LineTerminator	= \r|\n|\r\n
-WhiteSpace		= [\ ] | [\t]
-LPAREN			= \(
-RPAREN			= \)
-LBRACK			= \[
-RBRACK			= \]
-LBRACE			= \{
-RBRACE			= \}
-PLUS			= \+
-MINUS			= \-
-TIMES			= \*
-DIVIDE			= \/
-COMMA			= \,
-DOT				= \.
-SEMICOLON		= \;
-ASSIGN			= :=
-EQ				= \=
-LT				= \<
-GT				= \>
-NIL				= nil
-TYPE_INT		= int
-TYPE_VOID		= void
-TYPE_STRING		= string
-CLASS			= class
-ARRAY			= array
-WHILE			= while
-EXTENDS			= extends
-RETURN			= return
-NEW				= new
-IF				= if
-INT				= 0 | [1-9][0-9]*
-ID				= [a-zA-Z]+[a-zA-Z0-9]*
-STRING			= [\"][a-zA-Z][\"]
-COMMENT1_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | WhiteSpace
-COMMENT1		= \/\/(COMMENT1_CHARS)*LineTerminator
+LineTerminator		= \r|\n|\r\n
+WhiteSpace			= [\ ] | [\t]
+LPAREN				= \(
+RPAREN				= \)
+LBRACK				= \[
+RBRACK				= \]
+LBRACE				= \{
+RBRACE				= \}
+PLUS				= \+
+MINUS				= \-
+TIMES				= \*
+DIVIDE				= \/
+COMMA				= \,
+DOT					= \.
+SEMICOLON			= \;
+ASSIGN				= :=
+EQ					= \=
+LT					= \<
+GT					= \>
+NIL					= nil
+TYPE_INT			= int
+TYPE_VOID			= void
+TYPE_STRING			= string
+CLASS				= class
+ARRAY				= array
+WHILE				= while
+EXTENDS				= extends
+RETURN				= return
+NEW					= new
+IF					= if
+INT					= 0 | [1-9][0-9]*
+ID					= [a-zA-Z]+[a-zA-Z0-9]*
+STRING				= [\"][a-zA-Z][\"]
+COMMENT_ONE_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
+COMMENT_ONE			= [/][/]{COMMENT_ONE_CHARS}*{LineTerminator}
 
 
 /******************************/
@@ -127,6 +127,7 @@ COMMENT1		= \/\/(COMMENT1_CHARS)*LineTerminator
 
 {LineTerminator}	{}
 {WhiteSpace}		{}
+{COMMENT_ONE}		{}
 {LPAREN}			{ return symbol(TokenNames.LPAREN);}
 {RPAREN}			{ return symbol(TokenNames.RPAREN);}
 {LBRACK}			{ return symbol(TokenNames.LBRACK);}
@@ -158,6 +159,5 @@ COMMENT1		= \/\/(COMMENT1_CHARS)*LineTerminator
 {INT}				{ return symbol(TokenNames.INT, new Integer(yytext())); }
 {ID}				{ return symbol(TokenNames.ID, yytext()); }
 {STRING}			{ return symbol(TokenNames.STRING, yytext()); }
-{COMMENT1}			{ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }
