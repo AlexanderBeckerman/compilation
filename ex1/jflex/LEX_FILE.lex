@@ -71,7 +71,7 @@ import java_cup.runtime.*;
 /* MACRO DECALARATIONS */
 /***********************/
 LineTerminator	= \r|\n|\r\n
-WhiteSpace		= [\ ] | {LineTerminator} | [\t]
+WhiteSpace		= [\ ] | [\t]
 LPAREN			= \(
 RPAREN			= \)
 LBRACK			= \[
@@ -103,6 +103,8 @@ IF				= if
 INT				= 0 | [1-9][0-9]*
 ID				= [a-zA-Z]+[a-zA-Z0-9]*
 STRING			= [\"][a-zA-Z][\"]
+COMMENT1_CHARS	= [a-zA-Z0-9()[]{}?!+-*/.;] | WhiteSpace
+COMMENT1		= \\(COMMENT1_CHARS)*LineTerminator
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -155,5 +157,6 @@ STRING			= [\"][a-zA-Z][\"]
 {INT}				{ return symbol(TokenNames.INT, new Integer(yytext())); }
 {ID}				{ return symbol(TokenNames.ID, yytext()); }
 {STRING}			{ return symbol(TokenNames.STRING, yytext()); }
+{COMMENT1}			{ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }
