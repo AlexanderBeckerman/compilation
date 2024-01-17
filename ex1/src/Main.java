@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 
 import java_cup.runtime.Symbol;
 
-
 public class Main {
     static public void main(String argv[]) {
         Lexer l;
@@ -34,7 +33,6 @@ public class Main {
             /* [4] Read next token */
             /***********************/
             s = l.next_token();
-
             /********************************/
             /* [5] Main reading tokens loop */
             /********************************/
@@ -66,12 +64,11 @@ public class Main {
                         break;
                 }
 
+
                 file_writer.print(token_name);
                 if (token_name.equals("INT")) {
                     file_writer.print("(" + int_value + ")");
-                } else if (token_name.equals("STRING")) {
-                    file_writer.print("(\"" + str_value + "\")");
-                } else if (token_name.equals("ID")) {
+                } else if (token_name.equals("STRING") || token_name.equals("ID")) {
                     file_writer.print("(" + str_value + ")");
                 }
                 file_writer.print("[");
@@ -98,16 +95,15 @@ public class Main {
             /**************************/
             file_writer.close();
         } catch (Exception e) {
-            handleException(outputFilename);
+            printError(outputFilename);
         } catch (java.lang.Error e) {
-            handleException(outputFilename);
+            printError(outputFilename);
         }
-
     }
 
-    private static void handleException(String outputFilename) {
+    private static void printError(String filename) {
         try { // overwrite the file with "ERROR"
-            PrintWriter f_writer = new PrintWriter(outputFilename);
+            PrintWriter f_writer = new PrintWriter(filename);
             f_writer.println("ERROR");
             f_writer.close();
         } catch (IOException e2) {

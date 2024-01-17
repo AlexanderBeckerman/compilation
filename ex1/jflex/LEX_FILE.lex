@@ -102,10 +102,12 @@ NEW					= new
 IF					= if
 INT					= 0 | [1-9][0-9]*
 ID					= [a-zA-Z]+[a-zA-Z0-9]*
-STRING				= [\"][a-zA-Z][\"]
+STRING				= [\"][a-zA-Z]*[\"]
 COMMENT_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
 COMMENT_ONE			= [/][/]{COMMENT_CHARS}*{LineTerminator}
-COMMENT_TWO         = [/][\*]({COMMENT_CHARS} | {LineTerminator})*[\*][/]
+COMMENT_CHARS_WITHOUT_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\/\.\;] | {WhiteSpace} | {LineTerminator}
+COMMENT_CHARS_WITHOUT_SLASH_AND_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\.\;] | {WhiteSpace} | {LineTerminator}
+COMMENT_TWO         = [/][\*]({COMMENT_CHARS_WITHOUT_STAR} | (\*+{COMMENT_CHARS_WITHOUT_SLASH_AND_STAR}))*[\*]+[/]
 BAD_COMMENT         = [/][\*]
 
 
