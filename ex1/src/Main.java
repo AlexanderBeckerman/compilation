@@ -45,32 +45,21 @@ public class Main {
                 int char_pos = l.getTokenStartPosition();
                 int token_id = s.sym;
                 String token_name = TokenNames.names[token_id];
-                Integer int_value = -9999999; // Set to default value
-                String str_value = "";
 
                 switch (token_id) {
                     case TokenNames.INT:
-                        int_value = (Integer) s.value;
-                        if (int_value > 32767 || int_value < -32767)
+                        if ((Integer) s.value > 32767 || (Integer) s.value < -32767)
                             throw new Exception();
                         break;
-                    case TokenNames.STRING:
-                    case TokenNames.ID:
-                        str_value = (String) s.value;
-                        break;
                     case TokenNames.BAD_COMMENT:
+                    case TokenNames.BAD_ZERO:
                         throw new Exception();
-                    default:
-                        break;
                 }
 
 
                 file_writer.print(token_name);
-                if (token_name.equals("INT")) {
-                    file_writer.print("(" + int_value + ")");
-                } else if (token_name.equals("STRING") || token_name.equals("ID")) {
-                    file_writer.print("(" + str_value + ")");
-                }
+                if (token_name.equals("INT") || token_name.equals("STRING") || token_name.equals("ID"))
+                    file_writer.print("(" + s.value + ")");
                 file_writer.print("[");
                 file_writer.print(line_number);
                 file_writer.print(",");
@@ -94,9 +83,11 @@ public class Main {
             /* [10] Close output file */
             /**************************/
             file_writer.close();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             printError(outputFilename);
-        } catch (java.lang.Error e) {
+        }
+        catch (java.lang.Error e){
             printError(outputFilename);
         }
     }

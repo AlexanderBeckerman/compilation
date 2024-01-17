@@ -101,13 +101,14 @@ RETURN				= return
 NEW					= new
 IF					= if
 INT					= 0 | [1-9][0-9]*
+BAD_ZERO			= 0{INT}
 ID					= [a-zA-Z]+[a-zA-Z0-9]*
 STRING				= [\"][a-zA-Z]*[\"]
-COMMENT_CHARS	= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
-COMMENT_ONE			= [/][/]{COMMENT_CHARS}*{LineTerminator}
-COMMENT_CHARS_WITHOUT_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\/\.\;] | {WhiteSpace} | {LineTerminator}
-COMMENT_CHARS_WITHOUT_SLASH_AND_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\.\;] | {WhiteSpace} | {LineTerminator}
-COMMENT_TWO         = [/][\*]({COMMENT_CHARS_WITHOUT_STAR} | (\*+{COMMENT_CHARS_WITHOUT_SLASH_AND_STAR}))*[\*]+[/]
+COMMENT1_CHARS		= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
+COMMENT1			= [/][/]{COMMENT1_CHARS}*{LineTerminator}
+COMMENT2_CHARS_WITHOUT_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\/\.\;] | {WhiteSpace} | {LineTerminator}
+COMMENT2_CHARS_WITHOUT_SLASH = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\.\;] | {WhiteSpace} | {LineTerminator}
+COMMENT2         = [/][\*]({COMMENT2_CHARS_WITHOUT_STAR} | (\*{COMMENT2_CHARS_WITHOUT_SLASH}))*[\*]+[/]
 BAD_COMMENT         = [/][\*]
 
 
@@ -131,8 +132,8 @@ BAD_COMMENT         = [/][\*]
 
 {LineTerminator}	{}
 {WhiteSpace}		{}
-{COMMENT_ONE}		{}
-{COMMENT_TWO}       {}
+{COMMENT1}			{}
+{COMMENT2}       	{}
 {BAD_COMMENT}       { return symbol(TokenNames.BAD_COMMENT);}
 {LPAREN}			{ return symbol(TokenNames.LPAREN);}
 {RPAREN}			{ return symbol(TokenNames.RPAREN);}
@@ -165,5 +166,6 @@ BAD_COMMENT         = [/][\*]
 {INT}				{ return symbol(TokenNames.INT, new Integer(yytext())); }
 {ID}				{ return symbol(TokenNames.ID, yytext()); }
 {STRING}			{ return symbol(TokenNames.STRING, yytext()); }
+{BAD_ZERO}			{ return symbol(TokenNames.BAD_ZERO);}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }
