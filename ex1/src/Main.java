@@ -92,6 +92,11 @@ public class Main {
         }
     }
 
+    /**
+    * Overwrites the content of the specified file with "ERROR".
+    *
+    * @param filename The name of the file to be overwritten.
+    */
     private static void printError(String filename) {
         try { // overwrite the file with "ERROR"
             PrintWriter f_writer = new PrintWriter(filename);
