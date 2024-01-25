@@ -6,7 +6,6 @@
 /* USER CODE */
 /*************/
 import java_cup.runtime.*;
-import java.lang.*;
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -164,7 +163,7 @@ BAD_COMMENT         = [/][\*]
 {RETURN}			{ return symbol(TokenNames.RETURN); }
 {NEW}				{ return symbol(TokenNames.NEW); }
 {IF}				{ return symbol(TokenNames.IF); }
-{INT}				{ return symbol(TokenNames.INT, new Integer.valueOf(yytext())); }
+{INT}				{ return symbol(TokenNames.INT, Integer.valueOf(yytext())); }
 {ID}				{ return symbol(TokenNames.ID, yytext()); }
 {STRING}			{ return symbol(TokenNames.STRING, yytext()); }
 {BAD_ZERO}			{ return symbol(TokenNames.BAD_ZERO);}
