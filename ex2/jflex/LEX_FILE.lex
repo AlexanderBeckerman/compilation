@@ -2,25 +2,30 @@
 /* FILE NAME: LEX_FILE.lex */
 /***************************/
 
+/***************************/
+/* AUTHOR: OREN ISH SHALOM */
+/***************************/
+
 /*************/
 /* USER CODE */
 /*************/
+   
 import java_cup.runtime.*;
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
 /******************************/
-
+      
 %%
-
+   
 /************************************/
 /* OPTIONS AND DECLARATIONS SECTION */
 /************************************/
-
-/*****************************************************/
+   
+/*****************************************************/ 
 /* Lexer is the name of the class JFlex will create. */
 /* The code will be written to the file Lexer.java.  */
-/*****************************************************/
+/*****************************************************/ 
 %class Lexer
 
 /********************************************************************/
@@ -29,9 +34,9 @@ import java_cup.runtime.*;
 /********************************************************************/
 %line
 %column
-
+    
 /*******************************************************************************/
-/* Note that this has to be the EXACT same name of the class the CUP generates */
+/* Note that this has to be the EXACT smae name of the class the CUP generates */
 /*******************************************************************************/
 %cupsym TokenNames
 
@@ -39,16 +44,16 @@ import java_cup.runtime.*;
 /* CUP compatibility mode interfaces with a CUP generated parser. */
 /******************************************************************/
 %cup
-
+   
 /****************/
 /* DECLARATIONS */
 /****************/
-/*****************************************************************************/
+/*****************************************************************************/   
 /* Code between %{ and %}, both of which must be at the beginning of a line, */
-/* will be copied verbatim (letter to letter) into the Lexer class code.     */
+/* will be copied letter to letter into the Lexer class code.                */
 /* Here you declare member variables and functions that are used inside the  */
-/* scanner actions.                                                          */
-/*****************************************************************************/
+/* scanner actions.                                                          */  
+/*****************************************************************************/   
 %{
 	/*********************************************************************************/
 	/* Create a new java_cup.runtime.Symbol with information about the current token */
@@ -59,59 +64,18 @@ import java_cup.runtime.*;
 	/*******************************************/
 	/* Enable line number extraction from main */
 	/*******************************************/
-	public int getLine() { return yyline + 1; }
-
-	/**********************************************/
-	/* Enable token position extraction from main */
-	/**********************************************/
-	public int getTokenStartPosition() { return yycolumn + 1; }
+	public int getLine()    { return yyline + 1; } 
+	public int getCharPos() { return yycolumn;   } 
 %}
 
 /***********************/
 /* MACRO DECALARATIONS */
 /***********************/
-LineTerminator		= \r|\n|\r\n
-WhiteSpace			= [\ ] | [\t]
-LPAREN				= \(
-RPAREN				= \)
-LBRACK				= \[
-RBRACK				= \]
-LBRACE				= \{
-RBRACE				= \}
-PLUS				= \+
-MINUS				= \-
-TIMES				= \*
-DIVIDE				= \/
-COMMA				= \,
-DOT					= \.
-SEMICOLON			= \;
-ASSIGN				= :=
-EQ					= \=
-LT					= \<
-GT					= \>
-NIL					= nil
-TYPE_INT			= int
-TYPE_VOID			= void
-TYPE_STRING			= string
-CLASS				= class
-ARRAY				= array
-WHILE				= while
-EXTENDS				= extends
-RETURN				= return
-NEW					= new
-IF					= if
-INT					= 0 | [1-9][0-9]*
-BAD_ZERO			= 0{INT}
-ID					= [a-zA-Z]+[a-zA-Z0-9]*
-STRING				= [\"][a-zA-Z]*[\"]
-COMMENT1_CHARS		= [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\/\.\;] | {WhiteSpace}
-COMMENT1			= [/][/]{COMMENT1_CHARS}*{LineTerminator}
-COMMENT2_CHARS_WITHOUT_STAR = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\/\.\;] | {WhiteSpace} | {LineTerminator}
-COMMENT2_CHARS_WITHOUT_SLASH = [a-zA-Z0-9\(\)\[\]\{\}\?\!\+\-\*\.\;] | {WhiteSpace} | {LineTerminator}
-COMMENT2         = [/][\*]({COMMENT2_CHARS_WITHOUT_STAR} | (\*{COMMENT2_CHARS_WITHOUT_SLASH}))*[\*]+[/]
-BAD_COMMENT         = [/][\*]
-
-
+LineTerminator	= \r|\n|\r\n
+WhiteSpace		= {LineTerminator} | [ \t\f]
+INTEGER			= 0 | [1-9][0-9]*
+ID				= [a-zA-Z]+
+   
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
 /******************************/
@@ -121,7 +85,7 @@ BAD_COMMENT         = [/][\*]
 /************************************************************/
 /* LEXER matches regular expressions to actions (Java code) */
 /************************************************************/
-
+   
 /**************************************************************/
 /* YYINITIAL is the state at which the lexer begins scanning. */
 /* So these regular expressions will only be matched if the   */
@@ -130,42 +94,24 @@ BAD_COMMENT         = [/][\*]
 
 <YYINITIAL> {
 
-{LineTerminator}	{}
-{WhiteSpace}		{}
-{COMMENT1}			{}
-{COMMENT2}       	{}
-{BAD_COMMENT}       { return symbol(TokenNames.BAD_COMMENT);}
-{LPAREN}			{ return symbol(TokenNames.LPAREN);}
-{RPAREN}			{ return symbol(TokenNames.RPAREN);}
-{LBRACK}			{ return symbol(TokenNames.LBRACK);}
-{RBRACK}			{ return symbol(TokenNames.RBRACK);}
-{LBRACE}			{ return symbol(TokenNames.LBRACE);}
-{RBRACE}			{ return symbol(TokenNames.RBRACE);}
-{PLUS}				{ return symbol(TokenNames.PLUS); }
-{TIMES}				{ return symbol(TokenNames.TIMES); }
-{MINUS}				{ return symbol(TokenNames.MINUS); }
-{DIVIDE}			{ return symbol(TokenNames.DIVIDE); }
-{COMMA}				{ return symbol(TokenNames.COMMA); }
-{DOT}				{ return symbol(TokenNames.DOT); }
-{SEMICOLON}			{ return symbol(TokenNames.SEMICOLON); }
-{ASSIGN}			{ return symbol(TokenNames.ASSIGN); }
-{EQ}				{ return symbol(TokenNames.EQ); }
-{LT}				{ return symbol(TokenNames.LT); }
-{GT}				{ return symbol(TokenNames.GT); }
-{NIL}				{ return symbol(TokenNames.NIL); }
-{TYPE_INT}			{ return symbol(TokenNames.TYPE_INT); }
-{TYPE_VOID}			{ return symbol(TokenNames.TYPE_VOID); }
-{TYPE_STRING}		{ return symbol(TokenNames.TYPE_STRING); }
-{CLASS}				{ return symbol(TokenNames.CLASS); }
-{ARRAY}				{ return symbol(TokenNames.ARRAY); }
-{WHILE}				{ return symbol(TokenNames.WHILE); }
-{EXTENDS}			{ return symbol(TokenNames.EXTENDS); }
-{RETURN}			{ return symbol(TokenNames.RETURN); }
-{NEW}				{ return symbol(TokenNames.NEW); }
-{IF}				{ return symbol(TokenNames.IF); }
-{INT}				{ return symbol(TokenNames.INT, Integer.valueOf(yytext())); }
-{ID}				{ return symbol(TokenNames.ID, yytext()); }
-{STRING}			{ return symbol(TokenNames.STRING, yytext()); }
-{BAD_ZERO}			{ return symbol(TokenNames.BAD_ZERO);}
+"if"				{ return symbol(TokenNames.IF);}
+"="					{ return symbol(TokenNames.EQ);}
+"."					{ return symbol(TokenNames.DOT);}
+"+"					{ return symbol(TokenNames.PLUS);}
+"-"					{ return symbol(TokenNames.MINUS);}
+"*"					{ return symbol(TokenNames.TIMES);}
+"/"					{ return symbol(TokenNames.DIVIDE);}
+":="				{ return symbol(TokenNames.ASSIGN);}
+"("					{ return symbol(TokenNames.LPAREN);}
+")"					{ return symbol(TokenNames.RPAREN);}
+"["					{ return symbol(TokenNames.LBRACK);}
+"]"					{ return symbol(TokenNames.RBRACK);}
+"{"					{ return symbol(TokenNames.LBRACE);}
+"}"					{ return symbol(TokenNames.RBRACE);}
+";"					{ return symbol(TokenNames.SEMICOLON);}
+{ID}				{ return symbol(TokenNames.ID, new String(yytext()));}
+{INTEGER}			{ return symbol(TokenNames.INT, new Integer(yytext()));}
+{WhiteSpace}		{ /* just skip what was found, do nothing */ }
+{LineTerminator}	{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }
