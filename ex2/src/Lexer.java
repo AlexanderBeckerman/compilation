@@ -252,6 +252,12 @@ class Lexer implements java_cup.runtime.Scanner {
 	/*******************************************/
 	/* Enable line number extraction from main */
 	/*******************************************/
+	public int getLine() { return yyline + 1; }
+    public int getCharPos() { return yycolumn; }
+	/**********************************************/
+	/* Enable token position extraction from main */
+	/**********************************************/
+	public int getTokenStartPosition() { return yycolumn + 1; }
 	public int getLine()    { return yyline + 1; } 
 	public int getCharPos() { return yycolumn;   } 
 

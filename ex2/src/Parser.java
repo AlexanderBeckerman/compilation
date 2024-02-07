@@ -167,7 +167,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 	}
 	public void report_error(String message, Object info)
 	{
-		_lineNumber = lexer.getLine();
+		this._lineNumber = lexer.getLine();
 	}
 
 
