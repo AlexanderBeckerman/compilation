@@ -7,6 +7,8 @@ import AST.*;
 parser code 
 {:
 	public Lexer lexer;
+	public int _lineNumber; // The line number where the lexical error accured, if it accurs.
+
 
 	public Parser(Lexer lexer)
 	{
@@ -15,13 +17,7 @@ parser code
 	}
 	public void report_error(String message, Object info)
 	{
-		System.out.print("ERROR >> ");		
-		System.out.print("[");
-		System.out.print(lexer.getLine());
-		System.out.print(":");
-		System.out.print(lexer.getCharPos());
-		System.out.print("] ");		
-		System.exit(0);
+		this._lineNumber = lexer.getLine();
 	}
 :}
 
