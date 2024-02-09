@@ -6,6 +6,14 @@ import AST.*;
 
 public class Main
 {
+	static final int ERROR_RETURN = 0;
+	static final String CORECT_MSG = "OK";
+	static final String LEXIAL_ERR_MSG = "ERROR";
+	static String SYNTAX_ERR_MSG(int lineNumber)
+	{
+		return "ERROR(" + lineNumber + ")";
+	}
+
 	static public void main(String argv[])
 	{
 		Lexer l;
@@ -16,54 +24,51 @@ public class Main
 		PrintWriter file_writer;
 		String inputFilename = argv[0];
 		String outputFilename = argv[1];
-		
-		try
-		{
-			/********************************/
-			/* [1] Initialize a file reader */
-			/********************************/
+		try{
+			/* Initialize a file reader */
 			file_reader = new FileReader(inputFilename);
 
-			/********************************/
-			/* [2] Initialize a file writer */
-			/********************************/
+			/* Initialize a file writer */
 			file_writer = new PrintWriter(outputFilename);
-			
-			/******************************/
-			/* [3] Initialize a new lexer */
-			/******************************/
-			l = new Lexer(file_reader);
-			
-			/*******************************/
-			/* [4] Initialize a new parser */
-			/*******************************/
-			p = new Parser(l);
 
-			/***********************************/
-			/* [5] 3 ... 2 ... 1 ... Parse !!! */
-			/***********************************/
-			AST = (AST_STMT_LIST) p.parse().value;
-			
-			/*************************/
-			/* [6] Print the AST ... */
-			/*************************/
-			AST.PrintMe();
-			
-			/*************************/
-			/* [7] Close output file */
-			/*************************/
-			file_writer.close();
-			
-			/*************************************/
-			/* [8] Finalize AST GRAPHIZ DOT file */
-			/*************************************/
-			AST_GRAPHVIZ.getInstance().finalizeFile();
-    	}
-			     
-		catch (Exception e)
-		{
+			/* Initialize a new lexer */
+			l = new Lexer(file_reader);
+				
+			/* Initialize a new parser */
+			p = new Parser(l);
+			try
+			{
+				/* 3 ... 2 ... 1 ... Parse !!! */
+				AST = (AST_STMT_LIST) p.parse().value;
+				
+				/* Print the AST ... */
+				AST.PrintMe();
+				
+				/* Finalize AST GRAPHIZ DOT file */
+				AST_GRAPHVIZ.getInstance().finalizeFile();
+
+				// Parsed succefuly, printintg appropriate output to the output file.
+				file_writer.write(CORECT_MSG);
+			}
+			catch(Exception e)
+			{
+				// A sytax error was found, printing appropriate output to the output file.
+				file_writer.write(SYNTAX_ERR_MSG(p._lineNumber));
+			}
+			catch(Error e)
+			{
+				// A lexical error was found, printing appropriate output to the output file.
+				file_writer.write(LEXIAL_ERR_MSG);
+			}
+			finally{
+				/* Close output file */
+				file_writer.close();
+			}
+		}
+		catch(FileNotFoundException e){
 			e.printStackTrace();
 		}
+		
 	}
 }
 
