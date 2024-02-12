@@ -98,6 +98,7 @@ non terminal AST_FUNC_DEC funcDec;
 non terminal AST_FUNC_LIST funcList;
 non terminal AST_FUNC_NODE funcNode;
 non terminal AST_CLASS_DEC classDec;
+non terminal AST_NEW_EXP newExp;
 non terminal AST_CFIELD cField;
 non terminal AST_CFIELD_LIST cFieldList;
 non terminal AST_EXP exp;
@@ -182,6 +183,10 @@ exp			::=		INT:i								{: RESULT = new AST_EXP_INT(i);          :}
 					| exp:e1 PLUS  exp:e2				{: RESULT = new AST_EXP_BINOP(e1, e2, 0);:}
 					| exp:e1 MINUS exp:e2				{: RESULT = new AST_EXP_BINOP(e1, e2, 1);:}
 					;
+
+newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_EXP(t);          :}
+                    | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
+                    ;
 
 cfieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
                     | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
