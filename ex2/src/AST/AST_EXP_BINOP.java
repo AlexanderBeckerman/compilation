@@ -2,7 +2,7 @@ package AST;
 
 public class AST_EXP_BINOP extends AST_EXP
 {
-	int OP;
+	public int OP;
 	public AST_EXP left;
 	public AST_EXP right;
 	
@@ -41,11 +41,16 @@ public class AST_EXP_BINOP extends AST_EXP
 		/*********************************/
 		if (OP == 0) {sOP = "+";}
 		if (OP == 1) {sOP = "-";}
+		if (OP == 2) {sOP = "*";}
+		if (OP == 3) {sOP = "/";}
+		if (OP == 4) {sOP = "<";}
+		if (OP == 5) {sOP = ">";}
+		if (OP == 6) {sOP = "=";}
 		
 		/*************************************/
 		/* AST NODE TYPE = AST BINOP EXP */
 		/*************************************/
-		System.out.print("AST NODE BINOP EXP\n");
+		System.out.print("AST NODE BINOP(%s) EXP\n", sOP);
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
@@ -58,7 +63,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("BINOP(%s)",sOP));
+			String.format("EXP\nBINOP(%s)",sOP));
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

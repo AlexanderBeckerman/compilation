@@ -18,17 +18,17 @@ public class AST_VAR_FIELD extends AST_VAR
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
+		System.out.format("====================== var -> var DOT ID(%s)\n",fieldName);
 
 		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
+		/* COPY INPUT DATA MENBERS ... */
 		/*******************************/
 		this.var = var;
 		this.fieldName = fieldName;
 	}
 
 	/*************************************************/
-	/* The printing message for a field var AST node */
+	/* The printing message for a AST_VAR_FIELD node */
 	/*************************************************/
 	public void PrintMe()
 	{
@@ -48,7 +48,7 @@ public class AST_VAR_FIELD extends AST_VAR
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("FIELD\nVAR\n...->%s",fieldName));
+			String.format("FIELD\nVAR(%s)",fieldName));
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
