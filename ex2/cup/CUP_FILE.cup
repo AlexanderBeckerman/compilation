@@ -105,10 +105,11 @@ non terminal AST_EXP exp;
 non terminal AST_VAR var;
 non terminal AST_STMT stmt;
 non terminal AST_STMT_LIST stmtList;
+non terminal AST_TYPE type;
+non terminal AST_ARRAY_TYPE_DEF arrayTypedef;
 non terminal Integer BINOP;
 non terminal AST_EXP_LIST expList;
 non terminal AST_ACCESS access;
-non terminal AST_PROGRAM Program;
 
 /***********************/
 /* OPERATOR PRECEDENCE */
@@ -164,7 +165,7 @@ funcDec     ::=     type:t ID:name LPAREN RPAREN LBRACE stmtList:sl RBRACE      
                     ;
 
 classDec    ::=     CLASS ID:name LBRACE cFieldList:cfl RBRACE                     {: RESULT = new AST_CLASS_DEC(name, cfl); :}
-                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cfieldList:cfl RBRACE {: RESULT = new AST_CLASS_DEC(name1, name2, cfl); :}
+                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cFieldList:cfl RBRACE {: RESULT = new AST_CLASS_DEC(name1, name2, cfl); :}
                     ;
 
 stmtList	::=		stmt:s	stmtList:l		{: RESULT = new AST_STMT_LIST(s,l);    :}
@@ -207,6 +208,16 @@ exp			::=		INT:i								{: RESULT = new AST_EXP_INT(i);          :}
 					| access:a							{: RESULT = new AST_EXP_ACCESS(a); :}
 					;
 
+
+type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
+					| TYPE_STRING						{: RESULT = new AST_TYPE(1);  :}
+					| TYPE_VOID							{: RESULT = new AST_TYPE(2);  	:}
+					| ID:v								{: RESULT = new AST_TYPE(v);				:}
+					;
+
+
+arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+
 BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
 					| MINUS								{: RESULT = new Integer(1);:}
 					| TIMES								{: RESULT = new Integer(2);:}
@@ -219,7 +230,7 @@ newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_
                     | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
                     ;
 
-cfieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
+cFieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
                     | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
                     ;
 
