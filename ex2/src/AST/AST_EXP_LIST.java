@@ -3,8 +3,8 @@ package AST;
 public class AST_EXP_LIST extends AST_EXP
 {
     
-	public AST_STMT head;
-	public AST_STMT_LIST tail;
+	public AST_EXP head;
+	public AST_EXP_LIST tail;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
