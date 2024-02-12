@@ -24,10 +24,10 @@ public class AST_CLASS_DEC {
 
     public void PrintMe(){
         if (id2 == null){
-            System.out.format("AST NODE CLASS DEC(%s)", id1)
+            System.out.format("AST NODE CLASS DEC(%s)", id1);
         }
         else{
-            System.out.format("AST NODE CLASS DEC(%s) EXTENDS CLASS(%s)", id1, id2)
+            System.out.format("AST NODE CLASS DEC(%s) EXTENDS CLASS(%s)", id1, id2);
         }
         cfieldList.PrintMe();
         AST_GRAPHVIZ.getInstance().logNode(SerialNumber, String.format("CLASS\nDEC(%s)", id1));

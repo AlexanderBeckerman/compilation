@@ -92,7 +92,7 @@ non terminal AST_PROGRAM Program;
 non terminal AST_DEC_LIST decList;
 non terminal AST_DEC dec;
 
-
+non terminal AST_TYPE type;
 non terminal AST_VAR_DEC varDec;
 non terminal AST_FUNC_DEC funcDec;
 non terminal AST_FUNC_LIST funcList;
@@ -108,7 +108,7 @@ non terminal AST_STMT_LIST stmtList;
 non terminal Integer BINOP;
 non terminal AST_EXP_LIST expList;
 non terminal AST_ACCESS access;
-non terminal AST_PROGRAM Program;
+
 
 /***********************/
 /* OPERATOR PRECEDENCE */
@@ -164,7 +164,7 @@ funcDec     ::=     type:t ID:name LPAREN RPAREN LBRACE stmtList:sl RBRACE      
                     ;
 
 classDec    ::=     CLASS ID:name LBRACE cFieldList:cfl RBRACE                     {: RESULT = new AST_CLASS_DEC(name, cfl); :}
-                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cfieldList:cfl RBRACE {: RESULT = new AST_CLASS_DEC(name1, name2, cfl); :}
+                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cField:cfl RBRACE {: RESULT = new AST_CLASS_DEC(name1, name2, cfl); :}
                     ;
 
 stmtList	::=		stmt:s	stmtList:l		{: RESULT = new AST_STMT_LIST(s,l);    :}
@@ -172,10 +172,10 @@ stmtList	::=		stmt:s	stmtList:l		{: RESULT = new AST_STMT_LIST(s,l);    :}
 					;
 
 var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
-					| var:v DOT ID:fieldName			{: RESULT = new AST_VAR_FIELD(v,fieldName); :} 
-					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :} 
+					| var:v DOT ID:fieldName			{: RESULT = new AST_VAR_FIELD(v,fieldName); :}
+					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :}
 					;
-					
+
 stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN(v,e); :}
 					| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_IF(   cond,body); :}
 					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body); :}
@@ -207,7 +207,7 @@ exp			::=		INT:i								{: RESULT = new AST_EXP_INT(i);          :}
 					| access:a							{: RESULT = new AST_EXP_ACCESS(a); :}
 					;
 
-BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
+BINOP		::=		PLUS								{: RESULT = new Integer(0);:}
 					| MINUS								{: RESULT = new Integer(1);:}
 					| TIMES								{: RESULT = new Integer(2);:}
 					| DIVIDE							{: RESULT = new Integer(3);:}
