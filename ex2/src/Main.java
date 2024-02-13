@@ -67,6 +67,7 @@ public class Main
 			finally{
 				/* Close output file */
 				file_writer.close();
+				System.exit(0);
 			}
 		}
 		catch(FileNotFoundException e){
