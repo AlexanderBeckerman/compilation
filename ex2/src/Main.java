@@ -50,18 +50,20 @@ public class Main
 				// Parsed succefuly, printintg appropriate output to the output file.
 				file_writer.write(CORECT_MSG);
 			}
+			catch(RuntimeException e){
+				file_writer.write(LEXIAL_ERR_MSG);
+			}
 			catch(Exception e)
 			{
 				// A sytax error was found, printing appropriate output to the output file.
-				e.printStackTrace();
 				file_writer.write(SYNTAX_ERR_MSG(p._lineNumber));
 			}
 			catch(Error e)
 			{
 				// A lexical error was found, printing appropriate output to the output file.
-				e.printStackTrace();
 				file_writer.write(LEXIAL_ERR_MSG);
 			}
+
 			finally{
 				/* Close output file */
 				file_writer.close();
@@ -73,5 +75,4 @@ public class Main
 		
 	}
 }
-
 

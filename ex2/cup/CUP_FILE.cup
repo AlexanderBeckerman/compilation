@@ -26,6 +26,7 @@ parser code
 /************************/
 scan with
 {:
+
 	Symbol s;
 	s = lexer.next_token();
 	//System.out.print(s.sym);
@@ -35,6 +36,10 @@ scan with
 	System.out.print(lexer.getCharPos());
 	System.out.print("] ");
 	System.out.print(TokenNames.terminalNames[s.sym]);
+	if (TokenNames.terminalNames[s.sym].equals("BAD_ZERO") || TokenNames.terminalNames[s.sym].equals("BAD_COMMENT"))
+	{
+	    throw new RuntimeException("error bad token");
+	}
 	if (s.value != null)
 	{
 		System.out.print("( ");
