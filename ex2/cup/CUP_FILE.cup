@@ -91,8 +91,6 @@ terminal String STRING;
 non terminal AST_PROGRAM Program;
 non terminal AST_DEC_LIST decList;
 non terminal AST_DEC dec;
-
-
 non terminal AST_VAR_DEC varDec;
 non terminal AST_FUNC_DEC funcDec;
 non terminal AST_FUNC_LIST funcList;
@@ -177,9 +175,14 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :} 
 					;
 					
-stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN(v,e); :}
-					| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_IF(   cond,body); :}
-					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body); :}
+stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}
+					| var:v ASSIGN newExp:e SEMICOLON							{: RESULT = new AST_STMT_ASSIGN_NEWEXP(v,e); :}
+					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE		{: RESULT = new AST_STMT_IF(cond, body);     :}
+					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body);   :}
+					| varDec:v													{: RESULT = new AST_STMT_VARDEC(v);          :}
+					| access:a SEMICOLON										{: RESULT = new AST_STMT_ACCESS(a);          :}
+					| RETURN SEMICOLON											{: RESULT = new AST_STMT_RETURN(null);       :}
+					| RETURN exp:e SEMICOLON									{: RESULT = new AST_STMT_RETURN(e);          :}
 					;
 
 access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
@@ -226,6 +229,7 @@ BINOP		::=		PLUS								{: RESULT = new Integer(0);:}
 					| GT								{: RESULT = new Integer(5);:}
 					| EQ								{: RESULT = new Integer(6);:}
 					;
+
 newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_EXP(t);          :}
                     | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
                     ;
