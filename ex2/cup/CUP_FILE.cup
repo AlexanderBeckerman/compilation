@@ -91,8 +91,6 @@ terminal String STRING;
 non terminal AST_PROGRAM Program;
 non terminal AST_DEC_LIST decList;
 non terminal AST_DEC dec;
-
-
 non terminal AST_VAR_DEC varDec;
 non terminal AST_FUNC_DEC funcDec;
 non terminal AST_FUNC_LIST funcList;
@@ -148,6 +146,14 @@ dec         ::=     varDec:vd                {: RESULT = new AST_DEC(vd);       
                     | arrayTypedef:atd       {: RESULT = new AST_DEC(atd);        :}
                     ;
 
+type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
+					| TYPE_STRING						{: RESULT = new AST_TYPE(1);  :}
+					| TYPE_VOID							{: RESULT = new AST_TYPE(2);  	:}
+					| ID:v								{: RESULT = new AST_TYPE(v);				:}
+					;
+
+arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+
 varDec      ::=     type:t ID:name                      {: RESULT = new AST_VAR_DEC(t, name);     :}
                     | type:t ID:name ASSIGN exp:e       {: RESULT = new AST_VAR_DEC(t, name, e);  :}
                     | type:t ID:name ASSIGN newExp:ne   {: RESULT = new AST_VAR_DEC(t, name, ne); :}
@@ -176,11 +182,7 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					| var:v DOT ID:fieldName			{: RESULT = new AST_VAR_FIELD(v,fieldName); :} 
 					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :} 
 					;
-					
-stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN(v,e); :}
-					| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_IF(   cond,body); :}
-					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body); :}
-					;
+
 
 access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
 					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
@@ -188,9 +190,11 @@ access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null)
 					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
 					;
 
-expList		::=		exp:e COMMA expList:l				{: RESULT = new AST_EXP_LIST(e, l);:}
-					| exp:e								{: RESULT = new AST_EXP_LIST(e, null);:}
+stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN(v,e); :}
+					| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_IF(   cond,body); :}
+					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body); :}
 					;
+
 
 exp			::=		INT:i								{: RESULT = new AST_EXP_INT(i);          :}
 					| MINUS INT:i						{: RESULT = new AST_EXP_INT(-i);		 :}
@@ -208,17 +212,24 @@ exp			::=		INT:i								{: RESULT = new AST_EXP_INT(i);          :}
 					| access:a							{: RESULT = new AST_EXP_ACCESS(a);       :}
 					;
 
-
-type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
-					| TYPE_STRING						{: RESULT = new AST_TYPE(1);  :}
-					| TYPE_VOID							{: RESULT = new AST_TYPE(2);  	:}
-					| ID:v								{: RESULT = new AST_TYPE(v);				:}
+expList		::=		exp:e COMMA expList:l				{: RESULT = new AST_EXP_LIST(e, l);:}
+					| exp:e								{: RESULT = new AST_EXP_LIST(e, null);:}
 					;
 
+newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_EXP(t);          :}
+                    | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
+                    ;
 
-arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
 
-BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
+cField      ::=     varDec:v                            {: RESULT = new AST_CFIELD(v);            :}
+                    | funcDec:f                         {: RESULT = new AST_CFIELD(f);            :}
+                    ;
+
+cFieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
+                    | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
+                    ;
+
+BINOP		::=		PLUS								{: RESULT = new Integer(0);:}
 					| MINUS								{: RESULT = new Integer(1);:}
 					| TIMES								{: RESULT = new Integer(2);:}
 					| DIVIDE							{: RESULT = new Integer(3);:}
@@ -226,14 +237,3 @@ BINOP		::=		PLUS								{: RESULT = new Integer(0);:}
 					| GT								{: RESULT = new Integer(5);:}
 					| EQ								{: RESULT = new Integer(6);:}
 					;
-newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_EXP(t);          :}
-                    | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
-                    ;
-
-cFieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
-                    | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
-                    ;
-
-cField      ::=     varDec:v                            {: RESULT = new AST_CFIELD(v);            :}
-                    | funcDec:f                         {: RESULT = new AST_CFIELD(f);            :}
-                    ;
