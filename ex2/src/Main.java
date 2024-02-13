@@ -7,11 +7,11 @@ import AST.*;
 public class Main
 {
 	static final int ERROR_RETURN = 0;
-	static final String CORECT_MSG = "OK";
-	static final String LEXIAL_ERR_MSG = "ERROR";
+	static final String CORECT_MSG = "OK\n";
+	static final String LEXIAL_ERR_MSG = "ERROR\n";
 	static String SYNTAX_ERR_MSG(int lineNumber)
 	{
-		return "ERROR(" + lineNumber + ")";
+		return "ERROR(" + lineNumber + ")\n";
 	}
 
 	static public void main(String argv[])
