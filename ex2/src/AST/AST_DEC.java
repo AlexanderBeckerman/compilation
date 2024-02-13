@@ -5,7 +5,7 @@ public class AST_DEC extends AST_Node{
     public AST_VAR_DEC varDec;
     public AST_FUNC_DEC funcDec;
     public AST_CLASS_DEC classDec;
-    public AST_ARRAY_TYPEDEF arrayTypedef;
+    public AST_ARRAY_TYPE_DEF arrayTypedef;
 
 
     public AST_DEC(AST_VAR_DEC varDec){
@@ -23,7 +23,7 @@ public class AST_DEC extends AST_Node{
         System.out.print("====================== dec -> classDec\n");
         this.classDec = classDec;
     }
-    public AST_DEC(AST_ARRAY_TYPEDEF arrayTypedef){
+    public AST_DEC(AST_ARRAY_TYPE_DEF arrayTypedef){
         SerialNumber = AST_Node_Serial_Number.getFresh();
         System.out.print("====================== dec -> arrayTypedef\n");
         this.arrayTypedef = arrayTypedef;
@@ -34,7 +34,7 @@ public class AST_DEC extends AST_Node{
         System.out.print("AST NODE DEC\n");
 
         if (varDec != null){
-            varDec.PrineMe();
+            varDec.PrintMe();
             log_help();
             AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,varDec.SerialNumber);
         }

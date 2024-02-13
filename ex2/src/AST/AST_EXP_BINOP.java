@@ -50,7 +50,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		/*************************************/
 		/* AST NODE TYPE = AST BINOP EXP */
 		/*************************************/
-		System.out.print("AST NODE BINOP(%s) EXP\n", sOP);
+		System.out.format("AST NODE BINOP(%s) EXP\n", sOP);
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */

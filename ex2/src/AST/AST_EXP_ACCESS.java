@@ -2,12 +2,12 @@ package AST;
 
 public class AST_EXP_ACCESS extends AST_EXP
 {
-	public AST_EXP_ACCESS access;
+	public AST_ACCESS access;
 	
     /******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_ACCESS(AST_EXP_ACCESS access)
+	public AST_EXP_ACCESS(AST_ACCESS access)
 	{
 
         /******************************/

@@ -19,7 +19,7 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AST_STMT_LIST AST;
+		AST_PROGRAM AST;
 		FileReader file_reader;
 		PrintWriter file_writer;
 		String inputFilename = argv[0];
@@ -39,7 +39,7 @@ public class Main
 			try
 			{
 				/* 3 ... 2 ... 1 ... Parse !!! */
-				AST = (AST_STMT_LIST) p.parse().value;
+				AST = (AST_PROGRAM) p.parse().value;
 				
 				/* Print the AST ... */
 				AST.PrintMe();
@@ -49,6 +49,9 @@ public class Main
 
 				// Parsed succefuly, printintg appropriate output to the output file.
 				file_writer.write(CORECT_MSG);
+			}
+			catch(RuntimeException e){
+				file_writer.write(LEXIAL_ERR_MSG);
 			}
 			catch(Exception e)
 			{
@@ -60,9 +63,11 @@ public class Main
 				// A lexical error was found, printing appropriate output to the output file.
 				file_writer.write(LEXIAL_ERR_MSG);
 			}
+
 			finally{
 				/* Close output file */
 				file_writer.close();
+				System.exit(0);
 			}
 		}
 		catch(FileNotFoundException e){
@@ -71,5 +76,4 @@ public class Main
 		
 	}
 }
-
 
