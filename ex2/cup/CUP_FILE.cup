@@ -76,7 +76,8 @@ terminal EXTENDS;
 terminal RETURN;
 terminal NEW;
 terminal TYPE_STRING;
-
+terminal BAD_ZERO;
+terminal BAD_COMMENT;
 
 /*************/
 /* TERMINALS */
@@ -152,11 +153,9 @@ type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
 					| ID:v								{: RESULT = new AST_TYPE(v);				:}
 					;
 
-arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
-
-varDec      ::=     type:t ID:name                      {: RESULT = new AST_VAR_DEC(t, name);     :}
-                    | type:t ID:name ASSIGN exp:e       {: RESULT = new AST_VAR_DEC(t, name, e);  :}
-                    | type:t ID:name ASSIGN newExp:ne   {: RESULT = new AST_VAR_DEC(t, name, ne); :}
+varDec      ::=     type:t ID:name SEMICOLON                      {: RESULT = new AST_VAR_DEC(t, name);     :}
+                    | type:t ID:name ASSIGN exp:e SEMICOLON       {: RESULT = new AST_VAR_DEC(t, name, e);  :}
+                    | type:t ID:name ASSIGN newExp:ne SEMICOLON   {: RESULT = new AST_VAR_DEC(t, name, ne); :}
                     ;
 
 funcNode    ::=     type:t ID:name          {: RESULT = new AST_FUNC_NODE(t, name); :}
@@ -199,11 +198,6 @@ access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null)
 					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
 					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(i, l, null);   :}
 					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
-					;
-
-stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN(v,e); :}
-					| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_IF(   cond,body); :}
-					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body); :}
 					;
 
 
