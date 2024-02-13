@@ -183,6 +183,17 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :} 
 					;
 
+					
+stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}
+					| var:v ASSIGN newExp:e SEMICOLON							{: RESULT = new AST_STMT_ASSIGN_NEWEXP(v,e); :}
+					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE		{: RESULT = new AST_STMT_IF(cond, body);     :}
+					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body);   :}
+					| varDec:v													{: RESULT = new AST_STMT_VARDEC(v);          :}
+					| access:a SEMICOLON										{: RESULT = new AST_STMT_ACCESS(a);          :}
+					| RETURN SEMICOLON											{: RESULT = new AST_STMT_RETURN(null);       :}
+					| RETURN exp:e SEMICOLON									{: RESULT = new AST_STMT_RETURN(e);          :}
+					;
+
 
 access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
 					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
@@ -216,6 +227,19 @@ expList		::=		exp:e COMMA expList:l				{: RESULT = new AST_EXP_LIST(e, l);:}
 					| exp:e								{: RESULT = new AST_EXP_LIST(e, null);:}
 					;
 
+
+arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+
+BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
+					| MINUS								{: RESULT = new Integer(1);:}
+					| TIMES								{: RESULT = new Integer(2);:}
+					| DIVIDE							{: RESULT = new Integer(3);:}
+					| LT								{: RESULT = new Integer(4);:}
+					| GT								{: RESULT = new Integer(5);:}
+					| EQ								{: RESULT = new Integer(6);:}
+					;
+
+
 newExp      ::=     NEW type:t                          {: RESULT = new AST_NEW_EXP(t);          :}
                     | NEW type:t LBRACK exp:e RBRACK    {: RESULT = new AST_NEW_EXP(t, e);       :}
                     ;
@@ -228,12 +252,3 @@ cField      ::=     varDec:v                            {: RESULT = new AST_CFIE
 cFieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
                     | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
                     ;
-
-BINOP		::=		PLUS								{: RESULT = new Integer(0);:}
-					| MINUS								{: RESULT = new Integer(1);:}
-					| TIMES								{: RESULT = new Integer(2);:}
-					| DIVIDE							{: RESULT = new Integer(3);:}
-					| LT								{: RESULT = new Integer(4);:}
-					| GT								{: RESULT = new Integer(5);:}
-					| EQ								{: RESULT = new Integer(6);:}
-					;
