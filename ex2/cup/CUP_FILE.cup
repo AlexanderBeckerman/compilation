@@ -153,6 +153,8 @@ type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
 					| ID:v								{: RESULT = new AST_TYPE(v);				:}
 					;
 
+arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+
 varDec      ::=     type:t ID:name SEMICOLON                      {: RESULT = new AST_VAR_DEC(t, name);     :}
                     | type:t ID:name ASSIGN exp:e SEMICOLON       {: RESULT = new AST_VAR_DEC(t, name, e);  :}
                     | type:t ID:name ASSIGN newExp:ne SEMICOLON   {: RESULT = new AST_VAR_DEC(t, name, ne); :}
@@ -182,6 +184,12 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					| var:v LBRACK exp:e RBRACK			{: RESULT = new AST_VAR_SUBSCRIPT(v,e);     :} 
 					;
 
+
+access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
+					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
+					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(i, l, null);   :}
+					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
+					;
 					
 stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}
 					| var:v ASSIGN newExp:e SEMICOLON							{: RESULT = new AST_STMT_ASSIGN_NEWEXP(v,e); :}
@@ -191,13 +199,6 @@ stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_E
 					| access:a SEMICOLON										{: RESULT = new AST_STMT_ACCESS(a);          :}
 					| RETURN SEMICOLON											{: RESULT = new AST_STMT_RETURN(null);       :}
 					| RETURN exp:e SEMICOLON									{: RESULT = new AST_STMT_RETURN(e);          :}
-					;
-
-
-access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
-					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
-					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(i, l, null);   :}
-					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
 					;
 
 
@@ -222,7 +223,7 @@ expList		::=		exp:e COMMA expList:l				{: RESULT = new AST_EXP_LIST(e, l);:}
 					;
 
 
-arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+
 
 BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
 					| MINUS								{: RESULT = new Integer(1);:}

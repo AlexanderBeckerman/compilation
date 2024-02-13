@@ -19,7 +19,7 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AST_STMT_LIST AST;
+		AST_PROGRAM AST;
 		FileReader file_reader;
 		PrintWriter file_writer;
 		String inputFilename = argv[0];
@@ -39,7 +39,7 @@ public class Main
 			try
 			{
 				/* 3 ... 2 ... 1 ... Parse !!! */
-				AST = (AST_STMT_LIST) p.parse().value;
+				AST = (AST_PROGRAM) p.parse().value;
 				
 				/* Print the AST ... */
 				AST.PrintMe();
@@ -53,11 +53,13 @@ public class Main
 			catch(Exception e)
 			{
 				// A sytax error was found, printing appropriate output to the output file.
+				e.printStackTrace();
 				file_writer.write(SYNTAX_ERR_MSG(p._lineNumber));
 			}
 			catch(Error e)
 			{
 				// A lexical error was found, printing appropriate output to the output file.
+				e.printStackTrace();
 				file_writer.write(LEXIAL_ERR_MSG);
 			}
 			finally{
