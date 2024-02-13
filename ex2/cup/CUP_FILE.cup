@@ -227,9 +227,6 @@ expList		::=		exp:e COMMA expList:l				{: RESULT = new AST_EXP_LIST(e, l);:}
 					| exp:e								{: RESULT = new AST_EXP_LIST(e, null);:}
 					;
 
-
-
-
 BINOP		::=		PLUS								{: RESULT = new Integer(0);:}		
 					| MINUS								{: RESULT = new Integer(1);:}
 					| TIMES								{: RESULT = new Integer(2);:}

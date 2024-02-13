@@ -35,8 +35,7 @@ public class AST_TYPE extends AST_Node
                 stringType = "STRING";
         }
 
-        System.out.format("====================== type -> %s\n", stringType);
-
+      System.out.format("====================== type -> %s\n", stringType);
 	}
 
 	public AST_TYPE(String value)
@@ -49,9 +48,9 @@ public class AST_TYPE extends AST_Node
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== type -> ID(%s)\n", value);
 
-        this.value = value;
+		System.out.format("====================== type -> ID(%s)\n", value);
+    this.value = value;
 	}
 
 
@@ -90,11 +89,13 @@ public class AST_TYPE extends AST_Node
         else
         {
             /**************************************/
+
             /* PRINT Node to AST GRAPHVIZ DOT file */
             /***************************************/
             AST_GRAPHVIZ.getInstance().logNode(
                 SerialNumber,
                 String.format("TYPE_ID(%s)", value));
+
         }
 	}
 }
