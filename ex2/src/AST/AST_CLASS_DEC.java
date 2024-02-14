@@ -30,7 +30,12 @@ public class AST_CLASS_DEC extends AST_Node{
             System.out.format("AST NODE CLASS DEC(%s) EXTENDS CLASS(%s)", id1, id2);
         }
         cfieldList.PrintMe();
-        AST_GRAPHVIZ.getInstance().logNode(SerialNumber, String.format("CLASS\nDEC(%s)", id1));
-        AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,cfieldList.SerialNumber);
+        if (id2 == null){
+            AST_GRAPHVIZ.getInstance().logNode(SerialNumber, String.format("CLASS\nDEC(%s)", id1));
+        }
+        else {
+            AST_GRAPHVIZ.getInstance().logNode(SerialNumber, String.format("CLASS DEC(%s)\n EXTENDS (%s) ", id1, id2));
+        }
+        AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, cfieldList.SerialNumber);
     }
 }

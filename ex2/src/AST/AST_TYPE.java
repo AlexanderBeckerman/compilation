@@ -50,7 +50,7 @@ public class AST_TYPE extends AST_Node
 		/***************************************/
 
 		System.out.format("====================== type -> ID(%s)\n", value);
-    this.value = value;
+        this.value = value;
 	}
 
 
