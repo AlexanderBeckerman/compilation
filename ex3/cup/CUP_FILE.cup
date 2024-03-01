@@ -1,13 +1,14 @@
 /*************/
 /* IMPORT(S) */
 /*************/
+package MAIN;
+
 import java_cup.runtime.*;
 import AST.*;
 
 parser code 
 {:
 	public Lexer lexer;
-	public int _lineNumber; // The line number where the lexical error accured, if it accurs.
 
 
 	public Parser(Lexer lexer)
@@ -15,9 +16,16 @@ parser code
 		super(lexer);
 		this.lexer = lexer;
 	}
-	public void report_error(String message, Object info)
-	{
-		this._lineNumber = lexer.getLine();
+	
+	/**
+	* Reports an error by throwing a custom exception, LineError, with information about the line where the error occurred.
+	* Will be used when a syntax error has occurred.
+	*
+	* @throws LineError An exception indicating an error at a specific line, with the line number obtained from the lexer.
+	*/
+	public void report_error(String message, Object info) {
+		// Throws a LineError exception with the line number obtained from the lexer.
+		throw new LineError(lexer.getLine());
 	}
 :}
 
@@ -29,7 +37,6 @@ scan with
 
 	Symbol s;
 	s = lexer.next_token();
-	//System.out.print(s.sym);
 	System.out.print("[");
 	System.out.print(lexer.getLine());
 	System.out.print(":");
@@ -38,7 +45,7 @@ scan with
 	System.out.print(TokenNames.terminalNames[s.sym]);
 	if (TokenNames.terminalNames[s.sym].equals("BAD_ZERO") || TokenNames.terminalNames[s.sym].equals("BAD_COMMENT"))
 	{
-	    throw new RuntimeException("error bad token");
+	    throw new Error("error bad token");
 	}
 	if (s.value != null)
 	{

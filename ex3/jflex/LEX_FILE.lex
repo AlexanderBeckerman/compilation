@@ -5,6 +5,8 @@
 /*************/
 /* USER CODE */
 /*************/
+package MAIN;
+
 import java_cup.runtime.*;
 
 /******************************/
@@ -22,6 +24,7 @@ import java_cup.runtime.*;
 /* The code will be written to the file Lexer.java.  */
 /*****************************************************/ 
 %class Lexer
+%public
 
 /********************************************************************/
 /* The current line number can be accessed with the variable yyline */
