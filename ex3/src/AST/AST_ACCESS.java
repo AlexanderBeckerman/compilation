@@ -9,7 +9,7 @@ public class AST_ACCESS extends AST_Node
     /******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-    public AST_ACCESS(String id, AST_EXP_LIST expressions, AST_VAR var)
+    public AST_ACCESS(AST_VAR var, String id, AST_EXP_LIST expressions)
     {
 
         /******************************/

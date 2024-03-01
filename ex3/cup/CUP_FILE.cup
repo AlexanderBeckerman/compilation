@@ -187,10 +187,10 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					;
 
 
-access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
-					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
-					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(i, l, null);   :}
-					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
+access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(null, i, null);:}
+					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(v, i, null);   :}
+					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(null, i, l);   :}
+					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(v, i, l);     :}
 					;
 					
 stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}
