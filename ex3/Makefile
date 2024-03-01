@@ -248,3 +248,6 @@ debug:
 	@echo "******************************************************************"
 	eog ${OUTPUT_DIR}/SYMBOL_TABLE_0.jpeg &
 	
+clean:
+	rm -rf COMPILER
+	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/*.class ${BIN_DIR}/AST/*.class
