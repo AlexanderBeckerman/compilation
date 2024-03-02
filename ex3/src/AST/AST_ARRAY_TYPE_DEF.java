@@ -1,5 +1,8 @@
 package AST;
 
+import SYMBOL_TABLE.SYMBOL_TABLE;
+import TYPES.*;
+
 public class AST_ARRAY_TYPE_DEF extends AST_Node{
     AST_TYPE typy;
 	
@@ -48,5 +51,9 @@ public class AST_ARRAY_TYPE_DEF extends AST_Node{
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,typy.SerialNumber);
+	}
+
+	public TYPE SemantMe(){
+		return null;
 	}
 }

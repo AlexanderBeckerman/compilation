@@ -1,5 +1,8 @@
 package AST;
 
+import SYMBOL_TABLE.*;
+import TYPES.*;
+
 public class AST_CFIELD extends AST_Node
 {
 
@@ -40,5 +43,9 @@ public class AST_CFIELD extends AST_Node
                     "AST NODE CFIELD");
             AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,funcDec.SerialNumber);
         }
+    }
+    
+    public TYPE SemantMe(){
+        return null;
     }
 }

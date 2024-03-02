@@ -1,5 +1,8 @@
 package AST;
 
+import SYMBOL_TABLE.*;
+import TYPES.*;
+
 public class AST_EXP_ACCESS extends AST_EXP
 {
 	public AST_ACCESS access;
@@ -51,5 +54,9 @@ public class AST_EXP_ACCESS extends AST_EXP
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,access.SerialNumber);
+	}
+
+	public TYPE SemantMe(){
+		return null;
 	}
 }

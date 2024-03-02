@@ -1,17 +1,18 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
 
 public class AST_EXP_BINOP extends AST_EXP
-{
-	int OP;
+{	
+	public int OP;
 	public AST_EXP left;
 	public AST_EXP right;
-	
+	public int line_number;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_BINOP(AST_EXP left,AST_EXP right,int OP)
+	public AST_EXP_BINOP(AST_EXP left,AST_EXP right,int OP, int line_number)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -29,6 +30,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		this.left = left;
 		this.right = right;
 		this.OP = OP;
+		this.line_number = line_number;
 	}
 	
 	/*************************************************/
@@ -43,26 +45,29 @@ public class AST_EXP_BINOP extends AST_EXP
 		/*********************************/
 		if (OP == 0) {sOP = "+";}
 		if (OP == 1) {sOP = "-";}
-		if (OP == 3) {sOP = "=";}
-
+		if (OP == 2) {sOP = "*";}
+		if (OP == 3) {sOP = "/";}
+		if (OP == 4) {sOP = "<";}
+		if (OP == 5) {sOP = ">";}
+		if (OP == 6) {sOP = "=";}
+		
 		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
+		/* AST NODE TYPE = AST BINOP EXP */
 		/*************************************/
-		System.out.print("AST NODE BINOP EXP\n");
-		System.out.format("BINOP EXP(%s)\n",sOP);
+		System.out.format("AST NODE BINOP(%s) EXP\n", sOP);
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
 		if (left != null) left.PrintMe();
 		if (right != null) right.PrintMe();
-
+		
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("BINOP(%s)",sOP));
+			String.format("EXP\nBINOP(%s)",sOP));
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -77,11 +82,16 @@ public class AST_EXP_BINOP extends AST_EXP
 		
 		if (left  != null) t1 = left.SemantMe();
 		if (right != null) t2 = right.SemantMe();
-		
+
 		if ((t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance()))
 		{
 			return TYPE_INT.getInstance();
 		}
+		if (OP == 0 && (t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())){
+			return TYPE_STRING.getInstance();
+		}
+		if (OP == 6)
+		// return error here
 		System.exit(0);
 		return null;
 	}
