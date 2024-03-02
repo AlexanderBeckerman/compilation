@@ -22,9 +22,9 @@ public abstract class TYPE
 	 *
 	 * @param instance_type The type of the object to be checked.
 	 * @param super_type    The type to check against as a potential superclass.
-	 * @return True if the object is an instance of the specified type or inherits from it; otherwise, false.
+	 * @return True if every instance_type object is an instance of the specified type or inherits from it; otherwise, false.
 	 */
-	public boolean isInstanceOf(TYPE instance_type, TYPE super_type) {
+	public static boolean isInstanceOf(TYPE instance_type, TYPE super_type) {
 		if (instance_type instanceof TYPE_CLASS) {
 			TYPE_CLASS temp = (TYPE_CLASS) instance_type;
 
