@@ -26,7 +26,7 @@ public class SYMBOL_TABLE
 	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
-	
+	private int scope_depth;
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
 	/**************************************************************/
@@ -109,6 +109,7 @@ public class SYMBOL_TABLE
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
+		this.scope_depth++;
 		enter(
 			"SCOPE-BOUNDARY",
 			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
@@ -128,6 +129,7 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
 		/**************************************************************************/
+		this.scope_depth--;
 		while (top.name != "SCOPE-BOUNDARY")
 		{
 			table[top.index] = top.next;
@@ -246,7 +248,7 @@ public class SYMBOL_TABLE
 			/* [0] The instance itself ... */
 			/*******************************/
 			instance = new SYMBOL_TABLE();
-
+			instance.scope_depth = 0;
 			/*****************************************/
 			/* [1] Enter primitive types int, string */
 			/*****************************************/
@@ -271,5 +273,9 @@ public class SYMBOL_TABLE
 			
 		}
 		return instance;
+	}
+
+	public int getScopeDepth(){
+		return scope_depth;
 	}
 }
