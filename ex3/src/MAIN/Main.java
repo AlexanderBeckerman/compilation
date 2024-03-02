@@ -1,22 +1,21 @@
-   
+package MAIN;
+
 import java.io.*;
-import java.io.PrintWriter;
+
+import AST.AST_DEC_LIST;
+import AST.AST_GRAPHVIZ;
 import java_cup.runtime.Symbol;
-import AST.*;
 
 public class Main
 {
 	static final int ERROR_RETURN = 0;
 	static final String CORECT_MSG = "OK\n";
 	static final String LEXIAL_ERR_MSG = "ERROR\n";
-	static String SYNTAX_ERR_MSG(int lineNumber)
-	{
-		return "ERROR(" + lineNumber + ")\n";
-	}
+	public static Lexer l;
+	
 
 	static public void main(String argv[])
 	{
-		Lexer l;
 		Parser p;
 		Symbol s;
 		AST_DEC_LIST AST;
@@ -43,6 +42,9 @@ public class Main
 				
 				/* Print the AST ... */
 				AST.PrintMe();
+
+				/* Semant the AST ... */
+				AST.SemantMe();
 				
 				/* Finalize AST GRAPHIZ DOT file */
 				AST_GRAPHVIZ.getInstance().finalizeFile();
@@ -50,13 +52,10 @@ public class Main
 				// Parsed succefuly, printintg appropriate output to the output file.
 				file_writer.write(CORECT_MSG);
 			}
-			catch(RuntimeException e){
-				file_writer.write(LEXIAL_ERR_MSG);
-			}
-			catch(Exception e)
+			catch(LineError e)
 			{
-				// A sytax error was found, printing appropriate output to the output file.
-				file_writer.write(SYNTAX_ERR_MSG(p._lineNumber));
+				// A syntax/semantic error was found, printing appropriate output to the output file.
+				file_writer.write(e.getMessage());
 			}
 			catch(Error e)
 			{
@@ -65,8 +64,9 @@ public class Main
 			}
 
 			finally{
-				/* Close output file */
+				/* Close writer and reader. */
 				file_writer.close();
+				file_reader.close();
 				System.exit(0);
 			}
 		}

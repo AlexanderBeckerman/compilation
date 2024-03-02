@@ -14,13 +14,13 @@ MANIFEST_DIR      = ${BASEDIR}/manifest
 #########
 # FILES #
 #########
-JFlex_GENERATED_FILE      = ${SRC_DIR}/Lexer.java
-CUP_GENERATED_FILES       = ${SRC_DIR}/Parser.java ${SRC_DIR}/TokenNames.java
+JFlex_GENERATED_FILE      = ${SRC_DIR}/MAIN/Lexer.java
+CUP_GENERATED_FILES       = ${SRC_DIR}/MAIN/Parser.java ${SRC_DIR}/MAIN/TokenNames.java
 JFlex_CUP_GENERATED_FILES = ${JFlex_GENERATED_FILE} ${CUP_GENERATED_FILES}
-SRC_FILES                 = ${SRC_DIR}/*.java              \
-                            ${SRC_DIR}/AST/*.java          \
-                            ${SRC_DIR}/TYPES/*.java        \
-                            ${SRC_DIR}/SYMBOL_TABLE/*.java
+SRC_FILES                 = ${SRC_DIR}/AST/*.java          	\
+                            ${SRC_DIR}/TYPES/*.java        	\
+                            ${SRC_DIR}/SYMBOL_TABLE/*.java	\
+							${SRC_DIR}/MAIN/*.java
 EXTERNAL_JAR_FILES        = ${EXTERNAL_JARS_DIR}/java-cup-11b-runtime.jar
 MANIFEST_FILE             = ${MANIFEST_DIR}/MANIFEST.MF
 
@@ -29,7 +29,7 @@ MANIFEST_FILE             = ${MANIFEST_DIR}/MANIFEST.MF
 ########################
 JFlex_PROGRAM  = jflex
 JFlex_FLAGS    = -q
-JFlex_DEST_DIR = ${SRC_DIR}
+JFlex_DEST_DIR = ${SRC_DIR}/MAIN
 JFlex_FILE     = ${JFlex_DIR}/LEX_FILE.lex
 
 ######################
@@ -39,6 +39,7 @@ CUP_PROGRAM                    = java -jar ${EXTERNAL_JARS_DIR}/java-cup-11b.jar
 CUP_FILE                       = ${CUP_DIR}/CUP_FILE.cup
 CUP_GENERATED_PARSER_NAME      = Parser
 CUP_GENERATED_SYMBOLS_FILENAME = TokenNames
+CUP_DEST_DIR = ${SRC_DIR}/MAIN
 
 ######################
 # DEFINITIONS :: CUP #
@@ -78,7 +79,7 @@ compile:
 	@echo "*     TokenNames.java                                      *"
 	@echo "*                                                          *"
 	@echo "************************************************************"
-	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/*.class ${BIN_DIR}/AST/*.class
+	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/AST/*.class
 	@echo "\n"
 	@echo "************************************************************"
 	@echo "*                                                          *"
@@ -96,7 +97,7 @@ compile:
 	@echo "*                                                                             *"
 	@echo "*                                                                             *"
 	@echo "*******************************************************************************"
-	$(CUP_PROGRAM) ${CUP_FLAGS} -destdir ${SRC_DIR} ${CUP_FILE}
+	$(CUP_PROGRAM) ${CUP_FLAGS} -destdir ${CUP_DEST_DIR} ${CUP_FILE}
 	@echo "\n"
 	@echo "********************************************************"
 	@echo "*                                                      *"
@@ -137,7 +138,7 @@ debug:
 	@echo "*     TokenNames.java                                      *"
 	@echo "*                                                          *"
 	@echo "************************************************************"
-	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/*.class ${BIN_DIR}/AST/*.class
+	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/AST/*.class
 	@echo "\n"
 	@echo "************************************************************"
 	@echo "*                                                          *"
@@ -155,7 +156,7 @@ debug:
 	@echo "*                                                                             *"
 	@echo "*                                                                             *"
 	@echo "*******************************************************************************"
-	$(CUP_PROGRAM) ${CUP_FLAGS} -destdir ${SRC_DIR} ${CUP_FILE}
+	$(CUP_PROGRAM) ${CUP_FLAGS} -destdir ${CUP_DEST_DIR} ${CUP_FILE}
 	@echo "\n"
 	@echo "********************************************************"
 	@echo "*                                                      *"
@@ -248,3 +249,6 @@ debug:
 	@echo "******************************************************************"
 	eog ${OUTPUT_DIR}/SYMBOL_TABLE_0.jpeg &
 	
+clean:
+	rm -rf COMPILER
+	rm -rf ${JFlex_CUP_GENERATED_FILES} ${BIN_DIR}/*.class ${BIN_DIR}/AST/*.class
