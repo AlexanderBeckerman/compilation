@@ -1,23 +1,26 @@
 package AST;
 
+import TYPES.*;
+import SYMBOL_TABLE.*;
+
 public class AST_ACCESS extends AST_Node
 {
     public AST_VAR var;
     public String id;
     public AST_EXP_LIST expressions;
-
+    public int line_number;
     /******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-    public AST_ACCESS(String id, AST_EXP_LIST expressions, AST_VAR var)
+    public AST_ACCESS(String id, AST_EXP_LIST expressions, AST_VAR var, int line_number)
     {
-
+        
         /******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
         SerialNumber = AST_Node_Serial_Number.getFresh();
-
-
+        
+        
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
@@ -42,6 +45,7 @@ public class AST_ACCESS extends AST_Node
         this.var = var;
         this.id = id;
         this.expressions = expressions;
+        this.line_number = line_number;
     }
 
     /*************************************************/
@@ -74,4 +78,10 @@ public class AST_ACCESS extends AST_Node
         if (expressions != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,expressions.SerialNumber);
 
     }
+
+    public TYPE SemantMe(){
+        TYPE t;
+
+    }
+
 }

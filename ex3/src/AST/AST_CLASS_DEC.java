@@ -1,8 +1,7 @@
 package AST;
 
-import SYMBOL_TABLE.SYMBOL_TABLE;
-import TYPES.TYPE;
-import TYPES.TYPE_CLASS;
+import SYMBOL_TABLE.*;
+import TYPES.*;
 
 public class AST_CLASS_DEC extends AST_Node{
     public String id1, id2;
@@ -22,7 +21,7 @@ public class AST_CLASS_DEC extends AST_Node{
         this.id2 = id2;
         if (clist != null){
             cfieldList = clist;
-            System.out.print("====================== classDec -> CLASS ID LBRACE cfieldList RBRACE\n");
+            System.out.print("====================== classDec -> CLASS ID EXTENDS ID LBRACE cfieldList RBRACE\n");
         }
     }
 
@@ -53,7 +52,10 @@ public class AST_CLASS_DEC extends AST_Node{
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		TYPE_CLASS t = new TYPE_CLASS(null,name,data_members.SemantMe());
+        if (id2 == null)
+        {
+            TYPE_CLASS t = new TYPE_CLASS(null,name,data_members.SemantMe());
+        }
 
 		/*****************/
 		/* [3] End Scope */
