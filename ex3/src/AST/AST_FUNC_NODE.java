@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
 public class AST_FUNC_NODE extends AST_Node
 {
     public AST_TYPE t;
@@ -22,5 +26,25 @@ public class AST_FUNC_NODE extends AST_Node
                 SerialNumber,
                 String.format("FUNC\nNODE\n(%s)",id));
         if (t != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, t.SerialNumber);
+    }
+
+    public TYPE SemantMe(){
+
+        TYPE arg_t = t.SemantMe();
+        TYPE finalType = arg_t;
+        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+        if (table.find(arg_t.name) == null || arg_t instanceof TYPE_FUNCTION || arg_t instanceof TYPE_CLASS_INSTANCE || arg_t instanceof TYPE_ARRAY_INSTANCE){
+            // if the type doesnt exist
+            throw new LineError(lineNumber);
+        }
+        if (arg_t instanceof TYPE_ARRAY){ // type func(int[] arr){...}
+            finalType = new TYPE_ARRAY_INSTANCE(id, (TYPE_ARRAY)arg_t);
+        }
+        else if(arg_t instanceof TYPE_CLASS){ // type func(Person p){...}
+            finalType = new TYPE_CLASS_INSTANCE(id, (TYPE_CLASS)arg_t);
+        }
+        table.enter(id, finalType);
+        return finalType;
+
     }
 }
