@@ -5,100 +5,61 @@ import TYPES.*;
 
 public class AST_TYPE extends AST_Node
 {
-    int type;
-    public final int INT = 0;
-    public final int STRING = 1;
-    public final int VOID = 2;
-    public String value;
+    private String type;
 
 
-    /******************/
-	/* CONSTRUCTOR(S) */
-	/******************/
-	public AST_TYPE(int type)
+    
+    /*
+     * A simple constructor.
+     * 
+     * @param type A string with the name of the type.
+     */
+    public AST_TYPE(String type)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		/***************************************/
+        /***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-        this.type = type;
-        String stringType = "";
-        switch (type) {
-            case INT:
-                stringType = "INT";
-                break;
-            case VOID:
-                stringType = "VOID";
-                break;
-            case STRING:
-                stringType = "STRING";
+        if (type.equals("int") || type.equals("string") || type.equals("void")) {
+            System.out.format("====================== type -> %s\n", type);
         }
-
-      System.out.format("====================== type -> %s\n", stringType);
+		else
+        {
+            System.out.format("====================== type -> ID(%s)\n", type);
+        }
+        this.type = type;
 	}
-
-	public AST_TYPE(String value)
-	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
-		SerialNumber = AST_Node_Serial_Number.getFresh();
-
-		/***************************************/
-		/* PRINT CORRESPONDING DERIVATION RULE */
-		/***************************************/
-
-		System.out.format("====================== type -> ID(%s)\n", value);
-        this.value = value;
-	}
+ 
 
 
 	/*************************************************/
-	/* The printing message for a  AST node */
+	/* The printing message for a AST_TYPE */
 	/*************************************************/
 	public void PrintMe()
 	{
-        String stringType = "";
-
-        switch (type) {
-            case INT:
-                stringType = "INT";
-                break;
-            case VOID:
-                stringType = "VOID";
-                break;
-            case STRING:
-                stringType = "STRING";
-        }
 
 		/*************************************/
-		/* AST NODE TYPE = AST NODE            */
+		/* AST NODE TYPE = AST NODE          */
 		/*************************************/
-		System.out.format("AST NODE TYPE %s\n", stringType);
+		System.out.format("AST NODE TYPE %s\n", type);
 		
-        if(value == null)
-        {
-            /***************************************/
-            /* PRINT Node to AST GRAPHVIZ DOT file */
-            /***************************************/
+        /**************************************/
+        /* PRINT Node to AST GRAPHVIZ DOT file */
+        /***************************************/
+        if (this.type.equals("int") || this.type.equals("string") || this.type.equals("void")) {
             AST_GRAPHVIZ.getInstance().logNode(
-                SerialNumber,
-                String.format("TYPE_%s", stringType));
+            SerialNumber,
+            String.format("TYPE_%s", type));
         }
-        else
+		else
         {
-            /**************************************/
-
-            /* PRINT Node to AST GRAPHVIZ DOT file */
-            /***************************************/
             AST_GRAPHVIZ.getInstance().logNode(
-                SerialNumber,
-                String.format("TYPE_ID(%s)", value));
-
+            SerialNumber,
+            String.format("TYPE_ID(%s)", type));
         }
 	}
 
