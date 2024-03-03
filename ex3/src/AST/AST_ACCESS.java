@@ -97,7 +97,7 @@ public class AST_ACCESS extends AST_Node
             }
             func_type = (TYPE_FUNCTION) id_type;
             expected_args = func_type.params;
-            if (expected_args != null && expressions == null){
+            if ((expected_args != null && expressions == null) || (expected_args == null && expressions != null)){
                 throw new LineError(lineNumber); // Function with name id expects arguments but none were given
             }
             given_args = (TYPE_LIST) expressions.SemantMe(); // EXP_LIST SemantMe will return a list of the function argument types
@@ -112,7 +112,7 @@ public class AST_ACCESS extends AST_Node
                 throw new LineError(lineNumber); // if the given var isnt declared yet or is not a class instance
             }
             var_class = (TYPE_CLASS_INSTANCE) var_type;
-            func_type = (TYPE_FUNCTION) ((TYPE_CLASS_INSTANCE)var_class).ctype.findClassVarDec(id);
+            func_type = (TYPE_FUNCTION) ((TYPE_CLASS_INSTANCE)var_class).ctype.findClassMethod(id);
             if (func_type == null || !func_type.isFunction()){
                 throw new LineError(lineNumber); // could not find function or is not a function
             }
