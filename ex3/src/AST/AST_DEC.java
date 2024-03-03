@@ -64,6 +64,18 @@ public class AST_DEC extends AST_Node{
 
     public TYPE SemantMe()
 	{
+        if (varDec != null){
+            varDec.SemantMe();
+        }
+        if (funcDec != null){
+            funcDec.SemantMe();
+        }
+        if (classDec != null){
+            classDec.SemantMe();
+        }
+        if (arrayTypedef != null){
+            arrayTypedef.SemantMe();
+        }
 		return null;
 	}
 }
