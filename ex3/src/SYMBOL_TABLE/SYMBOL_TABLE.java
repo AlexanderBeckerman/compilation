@@ -300,12 +300,12 @@ public class SYMBOL_TABLE
 	}
 
 	/**
-	 * Checks if a given symbol is declared in the current.
+	 * Checks if a given symbol is declared in the current scope.
 	 *
 	 * @param symbol The symbol to be checked for existence in the current scope.
-	 * @return {@code true} if the symbol is found in the current scope, {@code false} otherwise.
+	 * @return {@code true} if the symbol is was declared in the current scope, {@code false} otherwise.
 	 */
-	public boolean checkScope(String symbol)
+	public boolean checkScopeDec(String symbol)
 	{
 		return scopeStack.get(scopeStack.size() - 1).containsKey(symbol);
 	}

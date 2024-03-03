@@ -1,5 +1,8 @@
 package AST;
 
+import SYMBOL_TABLE.*;
+import TYPES.*;
+
 public class AST_TYPE extends AST_Node
 {
     private String type;
@@ -59,4 +62,8 @@ public class AST_TYPE extends AST_Node
             String.format("TYPE_ID(%s)", type));
         }
 	}
+
+    public TYPE SemantMe(){
+        return null;
+    }
 }
