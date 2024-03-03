@@ -7,6 +7,9 @@ package SYMBOL_TABLE;
 /* GENERAL IMPORTS */
 /*******************/
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*******************/
 /* PROJECT IMPORTS */
@@ -18,7 +21,7 @@ import TYPES.*;
 /****************/
 public class SYMBOL_TABLE
 {
-	private int hashArraySize = 13;
+	private int hashArraySize = 9;
 	
 	/**********************************************/
 	/* The actual symbol table data structure ... */
@@ -27,20 +30,22 @@ public class SYMBOL_TABLE
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
 	private int scope_depth;
+	private ArrayList<Map<String, TYPE>> scopeStack = new ArrayList<>(); // A stack of hash maps, at each point at run time the top of the stack (scopeStack[scopeStack.size() - 1] holds a map from the symbols defined in the scope to its fields.)
+
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
 	/**************************************************************/
 	private int hash(String s)
 	{
-		if (s.charAt(0) == 'l') {return 1;}
+		if (s.charAt(0) == 'l') {return 0;}
 		if (s.charAt(0) == 'm') {return 1;}
-		if (s.charAt(0) == 'r') {return 3;}
-		if (s.charAt(0) == 'i') {return 6;}
-		if (s.charAt(0) == 'd') {return 6;}
-		if (s.charAt(0) == 'k') {return 6;}
+		if (s.charAt(0) == 'r') {return 2;}
+		if (s.charAt(0) == 'i') {return 3;}
+		if (s.charAt(0) == 'd') {return 4;}
+		if (s.charAt(0) == 'k') {return 5;}
 		if (s.charAt(0) == 'f') {return 6;}
-		if (s.charAt(0) == 'S') {return 6;}
-		return 12;
+		if (s.charAt(0) == 'S') {return 7;}
+		return 8;
 	}
 
 	/****************************************************************************/
@@ -78,6 +83,11 @@ public class SYMBOL_TABLE
 		/* [6] Print Symbol Table */
 		/**************************/
 		PrintMe();
+
+		/**********************************************************/
+		/* [7] Add the symbol to the map at the top of scopeStack */
+		/**********************************************************/
+		scopeStack.get(scopeStack.size()).put(name, t);
 	}
 
 	/***********************************************/
@@ -99,13 +109,13 @@ public class SYMBOL_TABLE
 	}
 
 	/***************************************************************************/
-	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
+	/* begin scope = Enter the <SCOPE-BOUNDARY> element to the data structure  */
 	/***************************************************************************/
 	public void beginScope()
 	{
 		/************************************************************************/
 		/* Though <SCOPE-BOUNDARY> entries are present inside the symbol table, */
-		/* they are not really types. In order to be ablt to debug print them,  */
+		/* they are not really types. In order to be able to debug print them,  */
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
@@ -118,6 +128,11 @@ public class SYMBOL_TABLE
 		/* Print the symbol table after every change */
 		/*********************************************/
 		PrintMe();
+
+		/********************************************************************/
+		/* Add a new hashMap for the scope at the top of the scopeStack map */
+		/********************************************************************/
+		scopeStack.add(new HashMap<>());
 	}
 
 	/********************************************************************************/
@@ -147,6 +162,11 @@ public class SYMBOL_TABLE
 		/* Print the symbol table after every change */		
 		/*********************************************/
 		PrintMe();
+
+		/***********************************************/
+		/* Remove the map at the top of the scopeStack */
+		/***********************************************/
+		scopeStack.remove(scopeStack.size() - 1 );
 	}
 	
 	public static int n=0;
@@ -277,5 +297,16 @@ public class SYMBOL_TABLE
 
 	public int getScopeDepth(){
 		return scope_depth;
+	}
+
+	/**
+	 * Checks if a given symbol is declared in the current scope.
+	 *
+	 * @param symbol The symbol to be checked for existence in the current scope.
+	 * @return {@code true} if the symbol is was declared in the current scope, {@code false} otherwise.
+	 */
+	public boolean checkScopeDec(String symbol)
+	{
+		return scopeStack.get(scopeStack.size() - 1).containsKey(symbol);
 	}
 }
