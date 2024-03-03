@@ -156,10 +156,10 @@ dec         ::=     varDec:vd                {: RESULT = new AST_DEC(vd);       
                     | arrayTypedef:atd       {: RESULT = new AST_DEC(atd);        :}
                     ;
 
-type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
-					| TYPE_STRING						{: RESULT = new AST_TYPE(1);  :}
-					| TYPE_VOID							{: RESULT = new AST_TYPE(2);  	:}
-					| ID:v								{: RESULT = new AST_TYPE(v);				:}
+type		::= 	TYPE_INT							{: RESULT = new AST_TYPE("int"); 	:}
+					| TYPE_STRING						{: RESULT = new AST_TYPE("string"); :}
+					| TYPE_VOID							{: RESULT = new AST_TYPE("void");  	:}
+					| ID:v								{: RESULT = new AST_TYPE(v);		:}
 					;
 
 arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};

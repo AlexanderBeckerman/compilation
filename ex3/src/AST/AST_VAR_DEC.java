@@ -1,5 +1,9 @@
 package AST;
 
+import SYMBOL_TABLE.SYMBOL_TABLE;
+import TYPES.*;
+import MAIN.*;
+
 public class AST_VAR_DEC extends AST_Node{
 
 
@@ -62,4 +66,70 @@ public class AST_VAR_DEC extends AST_Node{
         }
     }
 
+    /*
+     * The SemantMe implementation of AST_VAR_DEC.
+     * 
+     * @param inClass: true iff the declaration is within a class, meaning it was derived to a cfield by the grammer.
+     * @return: The static type of the declared variable.
+     */
+    public TYPE SemantMe(boolean inClass)
+	{
+		TYPE t;
+	
+		/****************************/
+		/* [1] Check If Type exists */
+		/****************************/
+		t = SYMBOL_TABLE.getInstance().find(this.t.getType());
+		if (t == null)
+		{
+			System.out.format(">> ERROR [%d:%d] non existing type %s\n", lineNumber, charPos, this.t.getType());
+			throw new LineError(this.lineNumber);
+		}
+		
+		/**************************************/
+		/* [2] Check that Name does NOT exist */
+		/**************************************/
+		if (SYMBOL_TABLE.getInstance().find(this.id) != null)
+		{
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", lineNumber, charPos, id);
+            throw new LineError(this.lineNumber);
+		}
+
+        /********************************************************************************************************************/
+		/* [3] If this is a class member declaration then newExp muse be null, and exp must be constant if it's isn't null. */
+		/********************************************************************************************************************/
+        if (inClass) {
+            if (newExp != null || (exp != null && !(exp instanceof AST_EXP_INT || exp instanceof AST_EXP_STRING || exp instanceof AST_EXP_NIL))) {
+                System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", lineNumber, charPos);
+                throw new LineError(this.lineNumber);
+            }
+        }
+
+        
+        /*******************************************************************************/
+		/* [4] Check that if a value was assigned, its type matches the type declared. */
+		/*******************************************************************************/
+        TYPE assignedType;
+        if (exp != null) {
+            assignedType = exp.SemantMe();
+        }
+        else if(newExp != null)
+        {
+            assignedType = newExp.SemantMe();
+        }
+        if ((assignedType != null) && (!TYPE.areMatchingTypes(assignedType, t))) {
+            System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", lineNumber, charPos, assignedType.name, this.t.getType());
+            throw new LineError(lineNumber);
+        }
+
+		/***************************************************/
+		/* [5] Enter the Function Type to the Symbol Table */
+		/***************************************************/
+		SYMBOL_TABLE.getInstance().enter(id,t);
+
+		/*************************************************************/
+		/* [6] Return value is irrelevant for variable declarations  */
+		/*************************************************************/
+		return t;
+	}
 }

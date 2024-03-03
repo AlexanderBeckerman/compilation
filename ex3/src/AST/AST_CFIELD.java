@@ -46,6 +46,14 @@ public class AST_CFIELD extends AST_Node
     }
     
     public TYPE SemantMe(){
+        if (varDec != null)
+        {
+            varDec.SemantMe(true);
+        }
+        else
+        {
+            funcDec.SemantMe(true);
+        }
         return null;
     }
 }

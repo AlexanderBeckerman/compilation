@@ -1,6 +1,6 @@
 package AST;
 
-import AST_TYPE_NAME_LIST;
+import AST.*;
 
 public class AST_FUNC_DEC extends AST_Node
 {

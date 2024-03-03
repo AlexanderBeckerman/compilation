@@ -2,6 +2,9 @@ package AST;
 
 import MAIN.*;
 
+/*
+ * All AST nodes are sub classes of this class.
+ */
 public abstract class AST_Node
 {
 	/*******************************************/
@@ -11,6 +14,7 @@ public abstract class AST_Node
 	/*******************************************/
 	public int SerialNumber;
 	public int lineNumber; // The line in which the symbol appeared.
+	public int charPos; // The char position of the symbol (probably will be off by a bit and will point to the last token in this node.)
 	
 	/***********************************************/
 	/* The default message for an unknown AST node */
@@ -23,5 +27,6 @@ public abstract class AST_Node
 	public AST_Node()
 	{
 		this.lineNumber = Main.l.getLine();
+		this.charPos = Main.l.getCharPos();
 	}
 }

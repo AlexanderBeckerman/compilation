@@ -99,7 +99,7 @@ public class SYMBOL_TABLE
 	}
 
 	/***************************************************************************/
-	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
+	/* begin scope = Enter the <SCOPE-BOUNDARY> element to the data structure  */
 	/***************************************************************************/
 	public void beginScope()
 	{
