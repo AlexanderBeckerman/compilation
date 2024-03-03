@@ -1,5 +1,8 @@
 package AST;
 
+import TYPES.*;
+import SYMBOL_TABLE.*;
+
 public class AST_EXP_EXP extends AST_EXP
 {
 	public AST_EXP exp;
@@ -46,5 +49,9 @@ public class AST_EXP_EXP extends AST_EXP
 			String.format("EXP\nEXP\n"));
 
         AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
+	}
+
+	public TYPE SemantMe(){
+		return exp.SemantMe();
 	}
 }

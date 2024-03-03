@@ -162,7 +162,7 @@ type		::= 	TYPE_INT							{: RESULT = new AST_TYPE(0); 	:}
 					| ID:v								{: RESULT = new AST_TYPE(v);				:}
 					;
 
-arrayTypedef::=  	ARRAY ID EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(v); :};
+arrayTypedef::=  	ARRAY ID:name EQ type:v LBRACK RBRACK SEMICOLON {: RESULT = new AST_ARRAY_TYPE_DEF(name, v); :};
 
 varDec      ::=     type:t ID:name SEMICOLON                      {: RESULT = new AST_VAR_DEC(t, name);     :}
                     | type:t ID:name ASSIGN exp:e SEMICOLON       {: RESULT = new AST_VAR_DEC(t, name, e);  :}
@@ -194,10 +194,10 @@ var			::=		ID:name								{: RESULT = new AST_VAR_SIMPLE(name);       :}
 					;
 
 
-access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(null, i, null);:}
-					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(v, i, null);   :}
-					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(null, i, l);   :}
-					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(v, i, l);     :}
+access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null);:}
+					| var:v DOT ID:i LPAREN RPAREN					{: RESULT = new AST_ACCESS(i, null, v);   :}
+					| ID:i LPAREN expList:l RPAREN					{: RESULT = new AST_ACCESS(i, l, null);   :}
+					| var:v DOT ID:i LPAREN expList:l RPAREN		{: RESULT = new AST_ACCESS(i, l , v);     :}
 					;
 					
 stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}

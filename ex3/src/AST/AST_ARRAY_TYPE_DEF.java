@@ -1,18 +1,19 @@
 package AST;
 
-import SYMBOL_TABLE.SYMBOL_TABLE;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
 import TYPES.*;
 
 public class AST_ARRAY_TYPE_DEF extends AST_Node{
     AST_TYPE typy;
-	
+	String name;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_ARRAY_TYPE_DEF(AST_TYPE typy)
+	public AST_ARRAY_TYPE_DEF(String id, AST_TYPE typy)
 	{
         this.typy = typy;
-
+		this.name = id;
         /******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
@@ -54,6 +55,19 @@ public class AST_ARRAY_TYPE_DEF extends AST_Node{
 	}
 
 	public TYPE SemantMe(){
+		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+		if (table.getScopeDepth() != 0)
+		{
+			throw new LineError(lineNumber); // must be declared in global scope
+		}
+		if (table.find(this.name) != null){
+			throw new LineError(lineNumber); // array name already exists
+		}
+		TYPE arrayType = table.find(typy.SemantMe().name);
+		if (arrayType == null || arrayType instanceof TYPE_VOID || arrayType.isClassInstance() || arrayType.isFunction() || arrayType.isArrayInstance()){
+			throw new LineError(lineNumber); // no such type or void array not allowed or is a function name or its an instance 
+		}
+		table.enter(name, new TYPE_ARRAY(name, arrayType));
 		return null;
 	}
 }

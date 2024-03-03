@@ -7,16 +7,6 @@ public abstract class TYPE
 	/******************************/
 	public String name;
 
-	/*************/
-	/* isClass() */
-	/*************/
-	public boolean isClass(){ return false;}
-
-	/*************/
-	/* isArray() */
-	/*************/
-	public boolean isArray(){ return false;}
-
 	/**
 	 * Checks if an object of a specific type is an instance of another type.
 	 *
