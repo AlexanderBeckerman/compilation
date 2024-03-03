@@ -1,5 +1,6 @@
 package AST;
 
+import MAIN.LineError;
 import SYMBOL_TABLE.*;
 import TYPES.*;
 
@@ -42,34 +43,31 @@ public class AST_CLASS_DEC extends AST_Node{
         AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, cfieldList.SerialNumber);
     }
 
-    	public TYPE SemantMe()
+    public TYPE SemantMe()
 	{	
-		/*************************/
-		/* [1] Begin Class Scope */
-		/*************************/
-		SYMBOL_TABLE.getInstance().beginScope();
+        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+        TYPE fatherType;
+        TYPE_CLASS fatherClassType = null;
+        TYPE_LIST clistTypes;
+        TYPE_CLASS classType;
 
-		/***************************/
-		/* [2] Semant Data Members */
-		/***************************/
-        if (id2 == null)
+        if (table.getScopeDepth() != 0 || table.find(id1) != null){
+            throw new LineError(lineNumber); // if not global scope or we already have class with same name
+        }
+        if (id2 != null)
         {
-            TYPE_CLASS t = new TYPE_CLASS(null,name,data_members.SemantMe());
+            fatherType = table.find(id2);
+            if (fatherType == null || !fatherType.isClass()){
+                throw new LineError(lineNumber); // no such extendable class exists or its not a class
+            }
+            fatherClassType = (TYPE_CLASS)fatherType;
         }
 
-		/*****************/
-		/* [3] End Scope */
-		/*****************/
-		SYMBOL_TABLE.getInstance().endScope();
-
-		/************************************************/
-		/* [4] Enter the Class Type to the Symbol Table */
-		/************************************************/
-		SYMBOL_TABLE.getInstance().enter(name,t);
-
-		/*********************************************************/
-		/* [5] Return value is irrelevant for class declarations */
-		/*********************************************************/
-		return null;		
+        table.beginScope();
+        classType = new TYPE_CLASS(fatherClassType, id1, cfieldList.SemantMe());
+        table.endScope();
+        table.enter(id1, classType);
+        return classType;
+        
 	}
 }

@@ -1,6 +1,7 @@
 package AST;
 
 import TYPES.*;
+import MAIN.LineError;
 import SYMBOL_TABLE.*;
 
 public class AST_EXP_BINOP extends AST_EXP
@@ -83,17 +84,24 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (left  != null) t1 = left.SemantMe();
 		if (right != null) t2 = right.SemantMe();
 
-		if ((t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance()))
+		if (OP < 6 && (t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance()))
 		{
-			return TYPE_INT.getInstance();
+			if (OP == 3 && ((AST_EXP_INT)right).value == 0) // division by zero
+			{
+				throw new LineError(lineNumber);
+			}
+			return TYPE_INT.getInstance(); // binary operation between two ints
 		}
 		if (OP == 0 && (t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())){
-			return TYPE_STRING.getInstance();
+			return TYPE_STRING.getInstance(); // adding two strings
 		}
-		if (OP == 6)
-		// return error here
-		System.exit(0);
-		return null;
-	}
+		if (OP == 6 && (TYPE.areMatchingTypes(t1, t2))){
+			return TYPE_INT.getInstance();
+		}
 
+		throw new LineError(lineNumber);
+
+	}
 }
+
+

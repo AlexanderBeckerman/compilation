@@ -1,5 +1,8 @@
 package AST;
 
+import SYMBOL_TABLE.*;
+import TYPES.*;
+
 public class AST_TYPE extends AST_Node
 {
     int type;
@@ -98,4 +101,8 @@ public class AST_TYPE extends AST_Node
 
         }
 	}
+
+    public TYPE SemantMe(){
+        return null;
+    }
 }
