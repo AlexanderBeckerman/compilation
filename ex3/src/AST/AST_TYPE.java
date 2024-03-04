@@ -5,7 +5,7 @@ import TYPES.*;
 
 public class AST_TYPE extends AST_Node
 {
-    private String type;
+    String type;
 
 
     

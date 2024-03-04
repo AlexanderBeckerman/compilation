@@ -91,7 +91,7 @@ public class AST_ACCESS extends AST_Node
         if (var == null)
         { // if it's not a class function call
             id_type = table.find(this.id);
-            if( id_type == null || !id_type.isFunction())
+            if( id_type == null || !(id_type instanceof TYPE_FUNCTION))
             {
                 throw new LineError(lineNumber);
             }
@@ -108,12 +108,12 @@ public class AST_ACCESS extends AST_Node
         else // else its a class function call
         {
             var_type = var.SemantMe();
-            if (var_type == null || !var_type.isClassInstance()){
+            if (var_type == null || !(var_type instanceof TYPE_CLASS_INSTANCE)){
                 throw new LineError(lineNumber); // if the given var isnt declared yet or is not a class instance
             }
             var_class = (TYPE_CLASS_INSTANCE) var_type;
             func_type = (TYPE_FUNCTION) ((TYPE_CLASS_INSTANCE)var_class).ctype.findClassMethod(id);
-            if (func_type == null || !func_type.isFunction()){
+            if (func_type == null || !(func_type instanceof TYPE_FUNCTION)){
                 throw new LineError(lineNumber); // could not find function or is not a function
             }
             expected_args = func_type.params;
