@@ -71,7 +71,7 @@ public class AST_CFIELD_LIST extends AST_Node
         if (head != null){
             if (head.funcDec != null)
             {
-                head_type = head.SemantMe();
+                head_type = head.SemantMe(class_type);
                 class_type.methods.append(head_type);
                 table.enter(head_type.name, head_type);
             }
@@ -87,7 +87,7 @@ public class AST_CFIELD_LIST extends AST_Node
         if (head != null){
             if (head.varDec != null)
             {
-                head_type = head.SemantMe();
+                head_type = head.SemantMe(class_type);
                 class_type.variables.append(head_type);
                 table.enter(head_type.name, head_type);
             }

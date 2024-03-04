@@ -1,6 +1,8 @@
 package AST;
 
-import AST_TYPE_NAME_LIST;
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
 
 public class AST_FUNC_DEC extends AST_Node
 {
@@ -47,62 +49,57 @@ public class AST_FUNC_DEC extends AST_Node
         if (sl != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,sl.SerialNumber);
     }
 
-    public TYPE SemantMe()
+    public TYPE SemantMe(boolean inClass, TYPE_CLASS class_type)
 	{
-		TYPE t;
-		TYPE returnType = null;
-		TYPE_LIST type_list = null;
+		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+		TYPE_FUNCTION func_type;
+		TYPE return_type;
+		TYPE_LIST func_params = null;
 
-		/*******************/
-		/* [0] return type */
-		/*******************/
-		returnType = SYMBOL_TABLE.getInstance().find(returnTypeName);
-		if (returnType == null)
-		{
-			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,returnType);				
+		TYPE find_type = table.find(id);
+		if (find_type != null && table.getScopeDepth() == 0){
+			// if we are in the global scope and class/function/something with same name already exists
+			throw new LineError(lineNumber);
 		}
-	
-		/****************************/
-		/* [1] Begin Function Scope */
-		/****************************/
-		SYMBOL_TABLE.getInstance().beginScope();
-
-		/***************************/
-		/* [2] Semant Input Params */
-		/***************************/
-		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail)
-		{
-			t = SYMBOL_TABLE.getInstance().find(it.head.type);
-			if (t == null)
-			{
-				System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,it.head.type);				
+		if (find_type != null && inClass && table.checkScopeDec(id)){
+			// if we are a class method and a variable/func/something with same name already exists
+			throw new LineError(lineNumber);
+		}
+		if (table.getScopeDepth() != 0 && !inClass){
+			// func declarations only allowed in global scope or as class methods
+			throw new LineError(lineNumber);
+		}
+		return_type = t.SemantMe();
+		find_type = table.find(return_type.name);
+		if (find_type == null || (!(find_type instanceof TYPE_CLASS) && !(find_type instanceof TYPE_ARRAY) && !(find_type instanceof TYPE_INT) 
+			&& !(find_type instanceof TYPE_STRING) && !(find_type instanceof TYPE_VOID))){
+				throw new LineError(lineNumber); // if no such return type exists or its not an array/class/int/string/void we return error
 			}
-			else
-			{
-				type_list = new TYPE_LIST(t,type_list);
-				SYMBOL_TABLE.getInstance().enter(it.head.name,t);
+		func_type = new TYPE_FUNCTION(return_type, id, null);
+		table.enter(id, func_type);
+		table.beginScope();
+		if (fl != null){
+			func_params = fl.SemantMe();
+		}
+		func_type.params = func_params;
+		sl.SemantMe(func_type);
+		table.endScope();
+
+		if (inClass && class_type != null){
+			TYPE prev_var = class_type.findClassVariable(id);
+			TYPE prev_method = class_type.findClassMethod(id);
+			if (prev_var != null){
+				// defining a method that shadows a previously defined variable is illegal
+				throw new LineError(lineNumber);
+			}
+			if (prev_method != null && prev_method instanceof TYPE_FUNCTION && !TYPE_FUNCTION.isOverriding((TYPE_FUNCTION)prev_method, func_type)){
+				// if we have a previously defined method with the same name and the new function isnt overriding but overloading
+				throw new LineError(lineNumber);
 			}
 		}
 
-		/*******************/
-		/* [3] Semant Body */
-		/*******************/
-		body.SemantMe();
 
-		/*****************/
-		/* [4] End Scope */
-		/*****************/
-		SYMBOL_TABLE.getInstance().endScope();
-
-		/***************************************************/
-		/* [5] Enter the Function Type to the Symbol Table */
-		/***************************************************/
-		SYMBOL_TABLE.getInstance().enter(name,new TYPE_FUNCTION(returnType,name,type_list));
-
-		/*********************************************************/
-		/* [6] Return value is irrelevant for class declarations */
-		/*********************************************************/
-		return null;		
+		return func_type;
 	}
 
 }
