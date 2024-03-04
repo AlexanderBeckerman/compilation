@@ -54,10 +54,10 @@ public class TYPE_CLASS extends TYPE
 			TYPE_LIST curr_attrs = curr_class.methods;
 			while (curr_attrs != null)
 			{ // loop over the attributes of the current class we are searching
-				TYPE_CLASS_VAR_DEC curr_attr = (TYPE_CLASS_VAR_DEC) curr_attrs.head;
+				TYPE_FUNCTION curr_attr = (TYPE_FUNCTION) curr_attrs.head;
 				if (curr_attr != null && curr_attr.name.equals(attrName))
 				{
-					return ((TYPE_CLASS_VAR_DEC)curr_attr).t; // return the type of the found attribute
+					return ((TYPE_FUNCTION)curr_attr).returnType; // return the type of the found attribute
 				}
 				curr_attrs = curr_attrs.tail;	
 			}

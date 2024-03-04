@@ -101,7 +101,7 @@ terminal String STRING;
 /*****************/
 /* NON TERMINALS */
 /*****************/
-non terminal AST_PROGRAM Program;
+
 non terminal AST_DEC_LIST decList;
 non terminal AST_DEC dec;
 non terminal AST_VAR_DEC varDec;

@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
 public class AST_STMT_ASSIGN_EXP extends AST_STMT
 {
 	/***************/
@@ -58,5 +62,17 @@ public class AST_STMT_ASSIGN_EXP extends AST_STMT
 		/****************************************/
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
+	}
+
+	public TYPE SemantMe(TYPE func_type){
+		
+		TYPE var_type = var.SemantMe();
+		TYPE exp_type = exp.SemantMe();
+
+		if (!TYPE.areMatchingTypes(exp_type, var_type)){
+			// Throw an error if var_type is not of type exp_type
+			throw new LineError(lineNumber);
+		}
+		return null;
 	}
 }

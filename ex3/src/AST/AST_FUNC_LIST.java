@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
 public class AST_FUNC_LIST extends AST_Node
 {
     public AST_FUNC_NODE head;
@@ -46,6 +50,14 @@ public class AST_FUNC_LIST extends AST_Node
         /****************************************/
         if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
         if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
+    }
+
+    public TYPE_LIST SemantMe(){
+        if(tail != null)
+        {
+            return new TYPE_LIST(head.SemantMe(), (TYPE_LIST) tail.SemantMe());
+        }
+        return new TYPE_LIST(head.SemantMe(), null); 
     }
 
 }

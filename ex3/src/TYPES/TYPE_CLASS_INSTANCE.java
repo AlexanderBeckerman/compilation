@@ -5,7 +5,7 @@ public class TYPE_CLASS_INSTANCE extends TYPE{
 
     public TYPE_CLASS ctype; // the class type of the instance
 
-    public TYPE_CLASS_INSTANCE(TYPE_CLASS ctype, String name){
+    public TYPE_CLASS_INSTANCE(String name, TYPE_CLASS ctype){
         this.ctype = ctype;
         this.name = name;
     }

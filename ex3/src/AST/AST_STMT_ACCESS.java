@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
 public class AST_STMT_ACCESS extends AST_STMT
 {
 	public AST_ACCESS access;
@@ -54,5 +58,9 @@ public class AST_STMT_ACCESS extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logEdge(
 			SerialNumber,
 			access.SerialNumber);
+	}
+
+	public TYPE SemantMe(TYPE func_type){
+		return access.SemantMe();
 	}
 }
