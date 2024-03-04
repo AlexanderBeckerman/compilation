@@ -46,28 +46,33 @@ public class AST_CLASS_DEC extends AST_Node{
     public TYPE SemantMe()
 	{	
         SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
-        TYPE fatherType;
-        TYPE_CLASS fatherClassType = null;
-        TYPE_LIST clistTypes;
-        TYPE_CLASS classType;
+        TYPE father_type;
+        TYPE_CLASS father_class_type = null;
+        TYPE_LIST methods;
+        TYPE_LIST variables;
+        TYPE_CLASS class_type;
 
         if (table.getScopeDepth() != 0 || table.find(id1) != null){
             throw new LineError(lineNumber); // if not global scope or we already have class with same name
         }
         if (id2 != null)
         {
-            fatherType = table.find(id2);
-            if (fatherType == null || !fatherType.isClass()){
+            father_type = table.find(id2);
+            if (father_type == null || !(father_type instanceof TYPE_CLASS)){
                 throw new LineError(lineNumber); // no such extendable class exists or its not a class
             }
-            fatherClassType = (TYPE_CLASS)fatherType;
+            father_class_type = (TYPE_CLASS)father_type;
         }
 
+        class_type = new TYPE_CLASS(father_class_type, id1, new TYPE_LIST(null, null), new TYPE_LIST(null, null));
+        table.enter(id1, class_type);
         table.beginScope();
-        classType = new TYPE_CLASS(fatherClassType, id1, cfieldList.SemantMe());
+        methods = cfieldList.SemantMeMethods(class_type);
+        variables = cfieldList.SemantMeVariables(class_type);
         table.endScope();
-        table.enter(id1, classType);
-        return classType;
+        
+        table.enter(id1, class_type);
+        return class_type;
         
 	}
 }

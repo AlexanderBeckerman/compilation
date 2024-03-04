@@ -37,4 +37,16 @@ public class TYPE_LIST
         }
 		return true;
 	}
+
+	public void append(TYPE a)
+    {
+        if (this.tail == null)
+        {
+            this.tail = new TYPE_LIST(a, null);
+        }
+        else
+        {
+            this.tail.append(a);
+        }
+    }
 }
