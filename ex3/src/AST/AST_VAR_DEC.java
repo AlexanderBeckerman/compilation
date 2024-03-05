@@ -76,39 +76,21 @@ public class AST_VAR_DEC extends AST_Node{
 	{
 		TYPE t;
 	
-		/****************************/
-		/* [1] Check if type exists */
-		/****************************/
-		t = SYMBOL_TABLE.getInstance().find(this.t.type);
-		if (t == null)
-		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n", lineNumber, charPos, this.t.type);
-			throw new LineError(this.lineNumber);
-		}
+		t = this.t.SemantMe(); // The type's existance is checked within t's SemantMe.
 		
-		/****************************************************************************************/
-		/* [2] Check that the name of the variable does NOT exist in the scope.                 */
-		/****************************************************************************************/
-		if (SYMBOL_TABLE.getInstance().checkScopeDec(this.id))
+		if (SYMBOL_TABLE.getInstance().checkScopeDec(this.id)) // Check that id isn't redeclared in the scope.
 		{
 			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", lineNumber, charPos, id);
             throw new LineError(this.lineNumber);
 		}
 
-        /********************************************************************************************************************/
-		/* [3] If this is a class member declaration then newExp muse be null, and exp must be constant if it's isn't null. */
-		/********************************************************************************************************************/
-        if (inClass) {
+        if (inClass) { // Checking the class declaration rules.
             if (newExp != null || (exp != null && !(exp instanceof AST_EXP_INT || exp instanceof AST_EXP_STRING || exp instanceof AST_EXP_NIL))) {
                 System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.lineNumber, this.charPos);
                 throw new LineError(this.lineNumber);
             }
         }
 
-        
-        /*******************************************************************************/
-		/* [4] Check that if a value was assigned, its type matches the type declared. */
-		/*******************************************************************************/
         TYPE assignedType;
         if (exp != null) {
             assignedType = exp.SemantMe();
@@ -122,9 +104,7 @@ public class AST_VAR_DEC extends AST_Node{
             throw new LineError(lineNumber);
         }
 
-		/***************************************************/
-		/* [5] Enter the Function Type to the Symbol Table */
-		/***************************************************/
+		/* Enter the Function Type to the Symbol Table */
 		SYMBOL_TABLE.getInstance().enter(id,t);
 
 		/***************************************************************************/
