@@ -1,12 +1,7 @@
 package AST;
 
 import MAIN.LineError;
-import SYMBOL_TABLE.SYMBOL_TABLE;
-import TYPES.TYPE;
-import TYPES.TYPE_ARRAY;
-import TYPES.TYPE_ARRAY_INSTANCE;
-import TYPES.TYPE_CLASS;
-import TYPES.TYPE_CLASS_INSTANCE;
+import TYPES.*;
 
 public class AST_VAR_FIELD extends AST_VAR
 {
@@ -65,14 +60,30 @@ public class AST_VAR_FIELD extends AST_VAR
 	}
 
 
+	/**
+     * The SemantMe implementation of AST_VAR_FIELD.
+     * 
+     * @return: The static type of the field.
+     */
     public TYPE SemantMe()
 	{
-		TYPE varType = var.SemantMe();
-		if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
-			System.out.format(">> ERROR [%d:%d] %s is not a class instance.\n", lineNumber, charPos, var);
-            throw new LineError(this.lineNumber);
-		}
+		TYPE varType;
+	
+		varType = this.var.SemantMe(); // The type's existance is checked within t's SemantMe.
+		
+        if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
+            System.out.format(">> ERROR [%d:%d] evaluated %s-type which is not a class and therefore instance member cannot be accessed.\n", this.lineNumber, this.charPos, varType.name);
+            throw new LineError(lineNumber);
+        }
 
-		return varType;
+		TYPE returned = ((TYPE_CLASS) varType).findClassVariable(fieldName); // Getting the type of fieldName.
+
+		if (returned == null) {
+            System.out.format(">> ERROR [%d:%d] %s doesn't have a member called %s.\n", this.lineNumber, this.charPos, varType.name, fieldName);
+            throw new LineError(lineNumber);
+        }
+
+		// Returning the static type of the field.
+		return returned;
 	}
 }
