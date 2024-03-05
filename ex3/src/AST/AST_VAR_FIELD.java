@@ -1,11 +1,7 @@
 package AST;
 
 import MAIN.LineError;
-import SYMBOL_TABLE.SYMBOL_TABLE;
-import TYPES.TYPE;
-import TYPES.TYPE_CLASS;
-import TYPES.TYPE_CLASS_INSTANCE;
-import TYPES.TYPE_CLASS_VAR_DEC;
+import TYPES.*;
 
 public class AST_VAR_FIELD extends AST_VAR
 {
@@ -62,6 +58,7 @@ public class AST_VAR_FIELD extends AST_VAR
 		/****************************************/
 		if (var != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 	}
+
 
 	/**
      * The SemantMe implementation of AST_VAR_FIELD.
