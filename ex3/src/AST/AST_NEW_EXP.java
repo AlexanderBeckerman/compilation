@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
 public class AST_NEW_EXP extends AST_Node {
 
     public AST_TYPE type;
@@ -41,4 +45,33 @@ public class AST_NEW_EXP extends AST_Node {
             AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, exp.SerialNumber);
         }
     }
+
+    public TYPE SemantMe(){
+
+        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+        TYPE this_type = table.find(type.SemantMe().name);
+
+        if (this_type == null){
+            // if no such type exists
+            throw new LineError(lineNumber);
+        }
+       if (exp == null){
+            if (!(this_type instanceof TYPE_CLASS)){
+                throw new LineError(lineNumber);
+            }
+       }
+       else{
+            if (exp.SemantMe() != TYPE_INT.getInstance() || (exp instanceof AST_EXP_INT && ((AST_EXP_INT)exp).value <= 0)){
+                throw new LineError(lineNumber);
+            }
+            if (this_type instanceof TYPE_ARRAY_INSTANCE){
+                return new TYPE_ARRAY_INSTANCE(null, (TYPE_ARRAY)((TYPE_ARRAY_INSTANCE)this_type).arr_type);
+            }
+            else {
+                return new TYPE_ARRAY_INSTANCE(null, new TYPE_ARRAY(null, this_type));
+            }
+        }
+        return this_type;
+       }
+
 }
