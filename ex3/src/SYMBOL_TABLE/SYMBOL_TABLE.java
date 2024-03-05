@@ -278,7 +278,7 @@ public class SYMBOL_TABLE
 			/*************************************/
 			/* [2] How should we handle void ??? */
 			/*************************************/
-
+			instance.enter("void", TYPE_VOID.getInstance());
 			/***************************************/
 			/* [3] Enter library function PrintInt */
 			/***************************************/
@@ -290,6 +290,12 @@ public class SYMBOL_TABLE
 					new TYPE_LIST(
 						TYPE_INT.getInstance(),
 						null)));
+			instance.enter(
+				"PrintString",
+				new TYPE_FUNCTION(TYPE_VOID.getInstance(),
+				 "PrintString",
+				  new TYPE_LIST(TYPE_STRING.getInstance(), null))
+			);
 			
 		}
 		return instance;

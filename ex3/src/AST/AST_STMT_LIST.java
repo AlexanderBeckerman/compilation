@@ -65,8 +65,8 @@ public class AST_STMT_LIST extends AST_Node
 	
 	public TYPE SemantMe(TYPE func_type)
 	{
-		if (head != null) head.SemantMe();
-		if (tail != null) tail.SemantMe();
+		if (head != null) head.SemantMe(func_type);
+		if (tail != null) tail.SemantMe(func_type);
 		
 		return null;
 	}
