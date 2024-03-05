@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_FUNCTION extends TYPE
+public class TYPE_FUNCTION extends TYPE_TYPE
 {
 	/***********************************/
 	/* The return type of the function */
