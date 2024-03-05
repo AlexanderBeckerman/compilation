@@ -69,18 +69,18 @@ public class AST_VAR_FIELD extends AST_VAR
 	{
 		TYPE varType;
 	
-		varType = this.var.SemantMe(); // The type's existance is checked within t's SemantMe.
+		varType = this.var.SemantMe(); // The type's existance is checked within var's SemantMe.
 		
         if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
             System.out.format(">> ERROR [%d:%d] evaluated %s-type which is not a class and therefore instance member cannot be accessed.\n", this.lineNumber, this.charPos, varType.name);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 
 		TYPE returned = ((TYPE_CLASS) varType).findClassVariable(fieldName); // Getting the type of fieldName.
 
 		if (returned == null) {
             System.out.format(">> ERROR [%d:%d] %s doesn't have a member called %s.\n", this.lineNumber, this.charPos, varType.name, fieldName);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 
 		// Returning the static type of the field.
