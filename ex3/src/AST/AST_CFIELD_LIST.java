@@ -64,37 +64,25 @@ public class AST_CFIELD_LIST extends AST_Node
         if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
         if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
     }
-    public TYPE_LIST SemantMeMethods(TYPE_CLASS class_type){
+    public TYPE_LIST SemantMe(TYPE_CLASS class_type){
 
-        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
+        // SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
         TYPE head_type = null;
         if (head != null){
+            head_type = head.SemantMe(class_type);
             if (head.funcDec != null)
             {
-                head_type = head.SemantMe(class_type);
                 class_type.methods.append(head_type);
-                table.enter(head_type.name, head_type);
+                // table.enter(head_type.name, head_type);
             }
-        }
-        if (tail != null){
-            tail.SemantMeMethods(class_type);
-        }
-        return class_type.methods;
-    } 
-    public TYPE_LIST SemantMeVariables(TYPE_CLASS class_type){
-        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
-        TYPE head_type = null;
-        if (head != null){
-            if (head.varDec != null)
+            else if (head.varDec != null)
             {
-                head_type = head.SemantMe(class_type);
                 class_type.variables.append(head_type);
-                table.enter(head_type.name, head_type);
             }
         }
         if (tail != null){
-            tail.SemantMeVariables(class_type);
+            tail.SemantMe(class_type);
         }
-        return class_type.variables;
-    }
+        return null;
+    } 
 }

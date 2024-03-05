@@ -67,8 +67,7 @@ public class AST_CLASS_DEC extends AST_Node{
         class_type = new TYPE_CLASS(father_class_type, id1, new TYPE_LIST(null, null), new TYPE_LIST(null, null));
         table.enter(id1, class_type);
         table.beginScope();
-        methods = cfieldList.SemantMeMethods(class_type);
-        variables = cfieldList.SemantMeVariables(class_type);
+        cfieldList.SemantMe(class_type);
         table.endScope();
         
         table.enter(id1, class_type);
