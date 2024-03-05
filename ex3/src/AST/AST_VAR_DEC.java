@@ -77,18 +77,18 @@ public class AST_VAR_DEC extends AST_Node{
 		TYPE t;
 	
 		/****************************/
-		/* [1] Check If Type exists */
+		/* [1] Check if type exists */
 		/****************************/
-		t = SYMBOL_TABLE.getInstance().find(this.t.getType());
+		t = SYMBOL_TABLE.getInstance().find(this.t.type);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n", lineNumber, charPos, this.t.getType());
+			System.out.format(">> ERROR [%d:%d] non existing type %s\n", lineNumber, charPos, this.t.type);
 			throw new LineError(this.lineNumber);
 		}
 		
-		/**************************************/
-		/* [2] Check that Name does NOT exist */
-		/**************************************/
+		/****************************************************************************************/
+		/* [2] Check that the name of the variable does NOT exist in the scope.                 */
+		/****************************************************************************************/
 		if (SYMBOL_TABLE.getInstance().checkScopeDec(this.id))
 		{
 			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", lineNumber, charPos, id);
