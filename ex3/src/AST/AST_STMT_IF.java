@@ -1,6 +1,7 @@
 package AST;
 
 import TYPES.*;
+import MAIN.LineError;
 import SYMBOL_TABLE.*;
 
 public class AST_STMT_IF extends AST_STMT
@@ -52,30 +53,30 @@ public class AST_STMT_IF extends AST_STMT
 		if (body != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
 	}
 
-	public TYPE SemantMe()
+	public TYPE SemantMe(TYPE_FUNCTION func_type)
 	{
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] condition inside IF is not integral\n",2,2);
+			throw new LineError(lineNumber);
 		}
-		
+		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
-		SYMBOL_TABLE.getInstance().beginScope();
+		table.beginScope();
 
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		body.SemantMe();
+		body.SemantMe(func_type); 
 
 		/*****************/
 		/* [3] End Scope */
 		/*****************/
-		SYMBOL_TABLE.getInstance().endScope();
+		table.endScope();
 
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */

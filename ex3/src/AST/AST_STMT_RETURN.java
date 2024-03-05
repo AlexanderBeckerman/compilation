@@ -1,5 +1,10 @@
 package AST;
 
+import TYPES.*;
+import MAIN.LineError;
+import SYMBOL_TABLE.*;
+
+
 public class AST_STMT_RETURN extends AST_STMT
 {
 	/****************/
@@ -46,5 +51,25 @@ public class AST_STMT_RETURN extends AST_STMT
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (exp != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
+	}
+
+	public TYPE SemantMe(TYPE_FUNCTION func_type){
+
+		if (func_type == null){
+			throw new LineError(lineNumber); // return not inside a function
+		}
+		if (exp == null)
+		{ // if we have "return;""
+			if (!(func_type.returnType.name.equals("void"))){
+				throw new LineError(lineNumber);
+			}
+		}
+		else{
+			TYPE exp_type = exp.SemantMe();
+			if (!TYPE.areMatchingTypes(exp_type, func_type.returnType)){
+				throw new LineError(lineNumber);
+			}
+		}
+		return null;
 	}
 }
