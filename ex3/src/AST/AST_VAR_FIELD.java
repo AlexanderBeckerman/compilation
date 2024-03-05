@@ -79,7 +79,7 @@ public class AST_VAR_FIELD extends AST_VAR
             throw new LineError(lineNumber);
         }
 
-		TYPE returned = ((TYPE_CLASS_VAR_DEC) ((TYPE_CLASS) varType).findClassVariable(fieldName)).t; // Getting the type of fieldName.
+		TYPE returned = ((TYPE_CLASS) varType).findClassVariable(fieldName); // Getting the type of fieldName.
 
 		if (returned == null) {
             System.out.format(">> ERROR [%d:%d] %s doesn't have a member called %s.\n", this.lineNumber, this.charPos, varType.name, fieldName);
@@ -87,6 +87,6 @@ public class AST_VAR_FIELD extends AST_VAR
         }
 
 		// Returning the static type of the field.
-		return re;
+		return returned;
 	}
 }
