@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_CLASS extends TYPE
+public class TYPE_CLASS extends TYPE_TYPE
 {
 	/*********************************************************************/
 	/* If this class does not extend a father class this should be null  */

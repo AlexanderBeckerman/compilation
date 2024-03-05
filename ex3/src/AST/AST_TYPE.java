@@ -1,5 +1,6 @@
 package AST;
 
+import MAIN.LineError;
 import SYMBOL_TABLE.*;
 import TYPES.*;
 
@@ -64,6 +65,17 @@ public class AST_TYPE extends AST_Node
 	}
 
     public TYPE SemantMe(){
-        return null;
+        
+        TYPE temp = SYMBOL_TABLE.getInstance().find(this.type);
+        
+        // Checking that temp is a valid type.
+        if (temp == null || !(temp instanceof TYPE_TYPE))
+		{
+			System.out.format(">> ERROR [%d:%d] %s is not a type, bakka-yaro!\n", lineNumber, charPos, this.type);
+			throw new LineError(this.lineNumber);
+		}
+        
+
+        return temp;
     }
 }

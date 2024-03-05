@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_VOID extends TYPE
+public class TYPE_VOID extends TYPE_TYPE
 {
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */

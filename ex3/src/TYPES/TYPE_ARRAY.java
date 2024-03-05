@@ -1,6 +1,6 @@
 package TYPES;
 /* type of declared arrays in global scope */
-public class TYPE_ARRAY extends TYPE{
+public class TYPE_ARRAY extends TYPE_TYPE{
 
     public TYPE dataType;
 

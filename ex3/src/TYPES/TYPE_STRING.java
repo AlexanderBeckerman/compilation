@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_STRING extends TYPE
+public class TYPE_STRING extends TYPE_TYPE
 {
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
