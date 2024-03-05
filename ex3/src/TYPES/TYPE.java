@@ -45,6 +45,11 @@ public abstract class TYPE
 			return true;
 		}
 
+		// nil is an instane of every array type.
+		if (instance_type == TYPE_NIL.getInstance() && super_type instanceof TYPE_ARRAY) {
+			return true;
+		}
+
 		// If the instance_type is not a class type, compare it directly with the super_type
 		return instance_type == super_type;
 	}

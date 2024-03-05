@@ -107,9 +107,7 @@ public class AST_VAR_DEC extends AST_Node{
 		/* Enter the Function Type to the Symbol Table */
 		SYMBOL_TABLE.getInstance().enter(id,t);
 
-		/***************************************************************************/
-		/* [6] Returning the Type for usage in the SemantMe function of AST_CFIELD */
-		/***************************************************************************/
+		// Returning the Type for usage in the SemantMe function of AST_CFIELD
 		return t;
 	}
 }
