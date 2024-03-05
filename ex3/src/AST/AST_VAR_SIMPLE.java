@@ -70,11 +70,11 @@ public class AST_VAR_SIMPLE extends AST_VAR
 	
         if (varType == null) {
             System.out.format(">> ERROR [%d:%d] %s is undeclared.\n", this.lineNumber, this.charPos, varType.name);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 		if (!(varType instanceof TYPE_INSTANCE)) {
             System.out.format(">> ERROR [%d:%d] %s isn't an instance.\n", this.lineNumber, this.charPos, name);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 
 		/*

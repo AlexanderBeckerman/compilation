@@ -107,7 +107,7 @@ public class AST_VAR_DEC extends AST_Node{
         }
         if ((assignedType != null) && (!TYPE.areMatchingTypes(assignedType, t))) {
             System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 
         /*

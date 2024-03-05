@@ -1,9 +1,13 @@
 package AST;
 
+import MAIN.LineError;
+import TYPES.*;
+
 public class AST_VAR_SUBSCRIPT extends AST_VAR
 {
 	public AST_VAR var;
 	public AST_EXP subscript;
+	private final int MIN_INDX = 0;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -55,5 +59,35 @@ public class AST_VAR_SUBSCRIPT extends AST_VAR
 		/****************************************/
 		if (var       != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 		if (subscript != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,subscript.SerialNumber);
+	}
+
+	/**
+     * The SemantMe implementation of AST_VAR_SUBSCRIPT.
+	 * 
+     * @return: The static type of array's cell contents.
+     */
+    public TYPE SemantMe()
+	{
+		TYPE varType = this.var.SemantMe();
+		TYPE argType = this.subscript.SemantMe(); 
+
+        if (!(varType instanceof TYPE_ARRAY)) {
+            System.out.format(">> ERROR [%d:%d] %s is not an array.\n", this.lineNumber, this.charPos, varType.name);
+            throw new LineError(this.lineNumber);
+        }
+
+		if (argType != TYPE_INT.getInstance()) {
+            System.out.format(">> ERROR [%d:%d] Refrencing an array cell by a value that is not an int.\n", this.lineNumber, this.charPos);
+            throw new LineError(this.lineNumber);
+        }
+
+		// If the index refrenced is constant it should not be negative.
+		if ((subscript instanceof AST_EXP_INT) && (((AST_EXP_INT)subscript).value < MIN_INDX)) {
+            System.out.format(">> ERROR [%d:%d] Refrencing an array cell by a negative value.\n", this.lineNumber, this.charPos);
+            throw new LineError(this.lineNumber);
+        }
+
+		// Returning the static type of the field.
+		return ((TYPE_ARRAY) varType).dataType;
 	}
 }
