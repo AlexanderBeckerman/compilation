@@ -1,5 +1,13 @@
 package AST;
 
+import MAIN.LineError;
+import SYMBOL_TABLE.SYMBOL_TABLE;
+import TYPES.TYPE;
+import TYPES.TYPE_ARRAY;
+import TYPES.TYPE_ARRAY_INSTANCE;
+import TYPES.TYPE_CLASS;
+import TYPES.TYPE_CLASS_INSTANCE;
+
 public class AST_VAR_FIELD extends AST_VAR
 {
 	public AST_VAR var;
@@ -54,5 +62,17 @@ public class AST_VAR_FIELD extends AST_VAR
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (var != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
+	}
+
+
+    public TYPE SemantMe()
+	{
+		TYPE varType = var.SemantMe();
+		if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
+			System.out.format(">> ERROR [%d:%d] %s is not a class instance.\n", lineNumber, charPos, var);
+            throw new LineError(this.lineNumber);
+		}
+
+		return varType;
 	}
 }
