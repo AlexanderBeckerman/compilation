@@ -1,5 +1,7 @@
 package AST;
 
+import TYPES.*;
+
 public class AST_STMT_VARDEC extends AST_STMT
 {
     public AST_VAR_DEC varDec;
@@ -53,5 +55,9 @@ public class AST_STMT_VARDEC extends AST_STMT
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
         AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, varDec.SerialNumber);
+    }
+
+    public TYPE SemantMe(){
+        return varDec.SemantMe(false);
     }
 }
