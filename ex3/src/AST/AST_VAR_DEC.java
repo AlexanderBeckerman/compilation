@@ -91,7 +91,7 @@ public class AST_VAR_DEC extends AST_Node{
             }
         }
 
-        TYPE assignedType;
+        TYPE assignedType = null;
         if (exp != null) {
             assignedType = exp.SemantMe();
         }
