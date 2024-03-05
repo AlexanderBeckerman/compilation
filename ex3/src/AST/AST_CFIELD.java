@@ -45,7 +45,12 @@ public class AST_CFIELD extends AST_Node
         }
     }
     
-    public TYPE SemantMe(){
-        return null;
+    public TYPE SemantMe(TYPE_CLASS class_type){
+        if (varDec != null){
+            return varDec.SemantMe(true);
+        }
+        else{
+            return funcDec.SemantMe(true, class_type); // pass the class of the cfield so we can check method overriding/overloading
+        }
     }
 }
