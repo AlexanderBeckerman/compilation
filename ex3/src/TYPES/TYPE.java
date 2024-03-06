@@ -38,14 +38,14 @@ public abstract class TYPE
 			return false;
 		}
 		
-		// nil is an instance of every class type.
-		if (instance_type == TYPE_NIL.getInstance() && super_type instanceof TYPE_CLASS) {
-			return true;
+		// nil is an instance of every class and array types, and only of those.
+		if (instance_type == TYPE_NIL.getInstance()) {
+			return ((super_type instanceof TYPE_CLASS) || (super_type instanceof TYPE_ARRAY));
 		}
 
-		// nil is an instane of every array type.
-		if (instance_type == TYPE_NIL.getInstance() && super_type instanceof TYPE_ARRAY) {
-			return true;
+		// If instance_type is an array stype, than super must be an array_type and both data types should match.
+		if (instance_type instanceof TYPE_ARRAY) {
+			return (super_type instanceof TYPE_ARRAY) && areMatchingTypes(((TYPE_ARRAY)instance_type).dataType, ((TYPE_ARRAY)super_type).dataType);
 		}
 
 		// If the instance_type is not a class type, compare it directly with the super_type
