@@ -13,7 +13,7 @@ public class AST_EXP_BINOP extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_BINOP(AST_EXP left,AST_EXP right,int OP, int line_number)
+	public AST_EXP_BINOP(AST_EXP left,AST_EXP right,int OP)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */

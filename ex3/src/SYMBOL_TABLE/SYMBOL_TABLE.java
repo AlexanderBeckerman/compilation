@@ -87,7 +87,7 @@ public class SYMBOL_TABLE
 		/**********************************************************/
 		/* [7] Add the symbol to the map at the top of scopeStack */
 		/**********************************************************/
-		scopeStack.get(scopeStack.size()).put(name, t);
+		scopeStack.get(scopeStack.size() - 1).put(name, t);
 	}
 
 	/***********************************************/
@@ -269,6 +269,8 @@ public class SYMBOL_TABLE
 			/*******************************/
 			instance = new SYMBOL_TABLE();
 			instance.scope_depth = 0;
+
+			instance.scopeStack.add(new HashMap<>());
 			/*****************************************/
 			/* [1] Enter primitive types int, string */
 			/*****************************************/
@@ -296,6 +298,7 @@ public class SYMBOL_TABLE
 				 "PrintString",
 				  new TYPE_LIST(TYPE_STRING.getInstance(), null))
 			);
+			
 			
 		}
 		return instance;
