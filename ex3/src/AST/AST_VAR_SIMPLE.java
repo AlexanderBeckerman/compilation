@@ -69,7 +69,7 @@ public class AST_VAR_SIMPLE extends AST_VAR
 		TYPE varType = SYMBOL_TABLE.getInstance().find(name);
 	
         if (varType == null) {
-            System.out.format(">> ERROR [%d:%d] %s is undeclared.\n", this.lineNumber, this.charPos, varType.name);
+            System.out.format(">> ERROR [%d:%d] %s is undeclared.\n", this.lineNumber, this.charPos, name);
             throw new LineError(this.lineNumber);
         }
 		if (!(varType instanceof TYPE_INSTANCE)) {
