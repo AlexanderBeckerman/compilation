@@ -69,7 +69,7 @@ public class AST_VAR_DEC extends AST_Node{
     /**
      * The SemantMe implementation of AST_VAR_DEC.
      * 
-     * @param inClass: true iff the declaration is within a class, meaning it was derived to a cfield by the grammer.
+     * @param inClass: true iff the declaration is within a class, meaning it was reduced to a cfield by the grammer.
      * @return: The static type of the declared variable.
      */
     public TYPE SemantMe(boolean inClass)
@@ -77,7 +77,13 @@ public class AST_VAR_DEC extends AST_Node{
 		TYPE t;
 	
 		t = this.t.SemantMe(); // The type's existance is checked within t's SemantMe.
-		
+
+        if (t == TYPE_VOID.getInstance())
+		{
+			System.out.format(">> ERROR [%d:%d] You cannot declare a variable as void.\n", lineNumber, charPos);
+            throw new LineError(this.lineNumber);
+		}
+
 		if (SYMBOL_TABLE.getInstance().checkScopeDec(this.id)) // Check that id isn't redeclared in the scope.
 		{
 			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", lineNumber, charPos, id);
@@ -91,7 +97,7 @@ public class AST_VAR_DEC extends AST_Node{
             }
         }
 
-        TYPE assignedType;
+        TYPE assignedType = null;
         if (exp != null) {
             assignedType = exp.SemantMe();
         }
@@ -101,15 +107,33 @@ public class AST_VAR_DEC extends AST_Node{
         }
         if ((assignedType != null) && (!TYPE.areMatchingTypes(assignedType, t))) {
             System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
-            throw new LineError(lineNumber);
+            throw new LineError(this.lineNumber);
         }
 
-		/* Enter the Function Type to the Symbol Table */
-		SYMBOL_TABLE.getInstance().enter(id,t);
+        /*
+         * This should not be like this, instead, all instance's types should be the same, and there should not be more than one TYPE instance for each type.
+         * But I wrote it like this so code won't get thrown away.
+         */
+        TYPE instanceType = null;
+        if (t instanceof TYPE_CLASS)
+        {
+            instanceType = new TYPE_CLASS_INSTANCE("This is fucking stupid", (TYPE_CLASS) t);
+        }
+        else if(t instanceof TYPE_ARRAY)
+        {
+            instanceType = new TYPE_ARRAY_INSTANCE("I fucking hate this", (TYPE_ARRAY) t);
+        }
+        else if((t instanceof TYPE_STRING) || (t instanceof TYPE_INT))
+        {
+            instanceType = new TYPE_PRIMITIVE_INSTANCE("Why did I start this degree", t);
+        }
+    
 
-		/***************************************************************************/
-		/* [6] Returning the Type for usage in the SemantMe function of AST_CFIELD */
-		/***************************************************************************/
+
+		/* Enter the Function Type to the Symbol Table */
+		SYMBOL_TABLE.getInstance().enter(id, instanceType);
+
+		// Returning the Type for usage in the SemantMe function of AST_CFIELD
 		return t;
 	}
 }

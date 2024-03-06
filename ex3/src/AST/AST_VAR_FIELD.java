@@ -1,5 +1,8 @@
 package AST;
 
+import MAIN.LineError;
+import TYPES.*;
+
 public class AST_VAR_FIELD extends AST_VAR
 {
 	public AST_VAR var;
@@ -54,5 +57,33 @@ public class AST_VAR_FIELD extends AST_VAR
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (var != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
+	}
+
+
+	/**
+     * The SemantMe implementation of AST_VAR_FIELD.
+     * 
+     * @return: The static type of the field.
+     */
+    public TYPE SemantMe()
+	{
+		TYPE varType;
+	
+		varType = this.var.SemantMe(); // The type's existance is checked within var's SemantMe.
+		
+        if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
+            System.out.format(">> ERROR [%d:%d] evaluated %s-type which is not a class and therefore instance member cannot be accessed.\n", this.lineNumber, this.charPos, varType.name);
+            throw new LineError(this.lineNumber);
+        }
+
+		TYPE returned = ((TYPE_CLASS) varType).findClassVariable(fieldName); // Getting the type of fieldName.
+
+		if (returned == null) {
+            System.out.format(">> ERROR [%d:%d] %s doesn't have a member called %s.\n", this.lineNumber, this.charPos, varType.name, fieldName);
+            throw new LineError(this.lineNumber);
+        }
+
+		// Returning the static type of the field.
+		return returned;
 	}
 }

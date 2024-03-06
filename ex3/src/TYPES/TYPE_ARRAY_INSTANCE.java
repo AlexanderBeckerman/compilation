@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_ARRAY_INSTANCE extends TYPE{
+public class TYPE_ARRAY_INSTANCE extends TYPE_INSTANCE{
 
     public TYPE_ARRAY arr_type;
     

@@ -22,11 +22,9 @@ public abstract class TYPE
 	 *
 	 * @param instance_type The type of the object to be checked.
 	 * @param super_type    The type to check against as a potential superclass.
-	 * @return True if every instance_type object is an instance of the specified type or inherits from it; otherwise, false.
+	 * @return true if every instance_type object is an instance of the specified type or inherits from it; otherwise, false.
 	 */
 	public static boolean areMatchingTypes(TYPE instance_type, TYPE super_type) {
-
-		
 		if (instance_type instanceof TYPE_CLASS) {
 			TYPE_CLASS temp = (TYPE_CLASS) instance_type;
 			// Traverse the class hierarchy using the father reference
@@ -40,8 +38,13 @@ public abstract class TYPE
 			return false;
 		}
 		
-		// nil is an instane of every class type.
+		// nil is an instance of every class type.
 		if (instance_type == TYPE_NIL.getInstance() && super_type instanceof TYPE_CLASS) {
+			return true;
+		}
+
+		// nil is an instane of every array type.
+		if (instance_type == TYPE_NIL.getInstance() && super_type instanceof TYPE_ARRAY) {
 			return true;
 		}
 
