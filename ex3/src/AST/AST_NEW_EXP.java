@@ -48,8 +48,8 @@ public class AST_NEW_EXP extends AST_Node {
 
     public TYPE SemantMe(){
 
-        SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
-        TYPE this_type = table.find(type.SemantMe().name);
+
+        TYPE this_type = type.SemantMe();
 
         if (this_type == null){
             // if no such type exists
@@ -60,11 +60,12 @@ public class AST_NEW_EXP extends AST_Node {
                 throw new LineError(lineNumber);
             }
        }
-        else if (this_type instanceof TYPE_ARRAY)
+        else
         {
             if (exp.SemantMe() != TYPE_INT.getInstance() || (exp instanceof AST_EXP_INT && ((AST_EXP_INT)exp).value <= 0)){
                 throw new LineError(lineNumber);
             }
+            return new TYPE_ARRAY(null, this_type);
         }
         return this_type;
        }
