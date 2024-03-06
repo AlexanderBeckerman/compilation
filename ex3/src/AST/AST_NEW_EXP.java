@@ -60,15 +60,10 @@ public class AST_NEW_EXP extends AST_Node {
                 throw new LineError(lineNumber);
             }
        }
-       else{
+        else if (this_type instanceof TYPE_ARRAY)
+        {
             if (exp.SemantMe() != TYPE_INT.getInstance() || (exp instanceof AST_EXP_INT && ((AST_EXP_INT)exp).value <= 0)){
                 throw new LineError(lineNumber);
-            }
-            if (this_type instanceof TYPE_ARRAY_INSTANCE){
-                return new TYPE_ARRAY_INSTANCE(null, (TYPE_ARRAY)((TYPE_ARRAY_INSTANCE)this_type).arr_type);
-            }
-            else {
-                return new TYPE_ARRAY_INSTANCE(null, new TYPE_ARRAY(null, this_type));
             }
         }
         return this_type;

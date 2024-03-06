@@ -108,11 +108,10 @@ public class AST_ACCESS extends AST_Node
         else // else its a class function call
         {
             var_type = var.SemantMe();
-            if (var_type == null || !(var_type instanceof TYPE_CLASS_INSTANCE)){
+            if (var_type == null || !(var_type instanceof TYPE_CLASS)){
                 throw new LineError(lineNumber); // if the given var isnt declared yet or is not a class instance
             }
-            var_class = (TYPE_CLASS_INSTANCE) var_type;
-            func_type = (TYPE_FUNCTION) ((TYPE_CLASS_INSTANCE)var_class).ctype.findClassMethod(id);
+            func_type = (TYPE_FUNCTION)(((TYPE_CLASS)var_type).findClassMethod(id));
             if (func_type == null || !(func_type instanceof TYPE_FUNCTION)){
                 throw new LineError(lineNumber); // could not find function or is not a function
             }

@@ -58,6 +58,6 @@ public class AST_STMT_VARDEC extends AST_STMT
     }
 
     public TYPE SemantMe(){
-        return varDec.SemantMe(false);
+        return varDec.SemantMe(false, null);
     }
 }

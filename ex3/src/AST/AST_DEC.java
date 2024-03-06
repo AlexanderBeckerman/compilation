@@ -65,7 +65,7 @@ public class AST_DEC extends AST_Node{
     public TYPE SemantMe()
 	{
         if (varDec != null){
-            varDec.SemantMe(false);
+            varDec.SemantMe(false, null);
         }
         if (funcDec != null){
             funcDec.SemantMe(false, null); // if we are declaring function from dec it means we are outside of scope class
