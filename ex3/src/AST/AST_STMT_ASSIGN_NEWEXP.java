@@ -64,7 +64,7 @@ public class AST_STMT_ASSIGN_NEWEXP extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
 	}
 
-	public TYPE SemantMe(TYPE func_type){
+	public TYPE SemantMe(TYPE_FUNCTION func_type){
 				
 		TYPE var_type = var.SemantMe();
 		TYPE exp_type = exp.SemantMe();

@@ -72,7 +72,7 @@ public class AST_FUNC_DEC extends AST_Node
 			func_params = fl.SemantMe();
 		}
 		func_type.params = func_params;
-		sl.SemantMe(func_type);
+		sl.SemantMe((TYPE_FUNCTION)func_type);
 		table.endScope();
 
 		if (inClass && class_type != null){
