@@ -62,6 +62,10 @@ public class Main
 				// A lexical error was found, printing appropriate output to the output file.
 				file_writer.write(LEXIAL_ERR_MSG);
 			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 
 			finally{
 				/* Close writer and reader. */
@@ -71,6 +75,9 @@ public class Main
 			}
 		}
 		catch(FileNotFoundException e){
+			e.printStackTrace();
+		}
+		catch(IOException e){
 			e.printStackTrace();
 		}
 		
