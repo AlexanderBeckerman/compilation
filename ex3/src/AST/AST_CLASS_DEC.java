@@ -48,8 +48,6 @@ public class AST_CLASS_DEC extends AST_Node{
         SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
         TYPE father_type;
         TYPE_CLASS father_class_type = null;
-        TYPE_LIST methods;
-        TYPE_LIST variables;
         TYPE_CLASS class_type;
 
         if (table.getScopeDepth() != 0 || table.find(id1) != null){
@@ -70,7 +68,6 @@ public class AST_CLASS_DEC extends AST_Node{
         cfieldList.SemantMe(class_type);
         table.endScope();
         
-        table.enter(id1, class_type);
         return class_type;
         
 	}
