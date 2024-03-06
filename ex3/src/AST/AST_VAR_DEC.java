@@ -72,7 +72,7 @@ public class AST_VAR_DEC extends AST_Node{
      * @param inClass: true iff the declaration is within a class, meaning it was reduced to a cfield by the grammer.
      * @return: The static type of the declared variable.
      */
-    public TYPE SemantMe(boolean inClass)
+    public TYPE SemantMe(boolean inClass, TYPE_CLASS class_type)
 	{
 		TYPE t;
 	
@@ -95,6 +95,10 @@ public class AST_VAR_DEC extends AST_Node{
                 System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.lineNumber, this.charPos);
                 throw new LineError(this.lineNumber);
             }
+            if (class_type.findClassMethod(id) != null || class_type.findClassVariable(id) != null){
+                System.out.format(">> ERROR [%d:%d] variable name already exists in class or in father class.\n", this.lineNumber, this.charPos);
+                throw new LineError(this.lineNumber);
+            }
         }
 
         TYPE assignedType = null;
@@ -105,6 +109,7 @@ public class AST_VAR_DEC extends AST_Node{
         {
             assignedType = newExp.SemantMe();
         }
+
         if ((assignedType != null) && (!TYPE.areMatchingTypes(assignedType, t))) {
             System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
             throw new LineError(this.lineNumber);
@@ -117,15 +122,15 @@ public class AST_VAR_DEC extends AST_Node{
         TYPE instanceType = null;
         if (t instanceof TYPE_CLASS)
         {
-            instanceType = new TYPE_CLASS_INSTANCE("This is fucking stupid", (TYPE_CLASS) t);
+            instanceType = new TYPE_CLASS_INSTANCE(id, (TYPE_CLASS) t);
         }
         else if(t instanceof TYPE_ARRAY)
         {
-            instanceType = new TYPE_ARRAY_INSTANCE("I fucking hate this", (TYPE_ARRAY) t);
+            instanceType = new TYPE_ARRAY_INSTANCE(id, (TYPE_ARRAY) t);
         }
         else if((t instanceof TYPE_STRING) || (t instanceof TYPE_INT))
         {
-            instanceType = new TYPE_PRIMITIVE_INSTANCE("Why did I start this degree", t);
+            instanceType = new TYPE_PRIMITIVE_INSTANCE(id, t);
         }
     
 
