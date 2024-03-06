@@ -22,6 +22,7 @@ public class AST_STMT_WHILE extends AST_STMT
 		
 		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
 		if (cond.SemantMe() != TYPE_INT.getInstance()){
+			System.out.format(">> ERROR [%d:%d] while loop condition must be an int.\n", this.lineNumber, this.charPos);
 			throw new LineError(lineNumber); // not a valid condition
 		}
 		table.beginScope();

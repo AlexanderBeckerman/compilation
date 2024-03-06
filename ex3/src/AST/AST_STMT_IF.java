@@ -60,6 +60,7 @@ public class AST_STMT_IF extends AST_STMT
 		/****************************/
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
+			System.out.format(">> ERROR [%d:%d] if condition must be an int.\n", this.lineNumber, this.charPos);
 			throw new LineError(lineNumber);
 		}
 		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();

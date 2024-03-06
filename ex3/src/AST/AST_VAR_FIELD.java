@@ -71,7 +71,7 @@ public class AST_VAR_FIELD extends AST_VAR
 	
 		varType = this.var.SemantMe(); // The type's existance is checked within var's SemantMe.
 		
-        if (!(varType instanceof TYPE_CLASS_INSTANCE)) {
+        if (!(varType instanceof TYPE_CLASS)) {
             System.out.format(">> ERROR [%d:%d] evaluated %s-type which is not a class and therefore instance member cannot be accessed.\n", this.lineNumber, this.charPos, varType.name);
             throw new LineError(this.lineNumber);
         }
