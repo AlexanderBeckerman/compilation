@@ -9,7 +9,6 @@ public class AST_EXP_BINOP extends AST_EXP
 	public int OP;
 	public AST_EXP left;
 	public AST_EXP right;
-	public int line_number;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -94,10 +93,9 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (OP == 0 && (t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())){
 			return TYPE_STRING.getInstance(); // adding two strings
 		}
-		if (OP == 6 && (TYPE.areMatchingTypes(t1, t2))){
+		if (OP == 6 && (TYPE.areMatchingTypes(t1, t2) || TYPE.areMatchingTypes(t2, t1))){
 			return TYPE_INT.getInstance();
 		}
-
 		throw new LineError(lineNumber);
 
 	}
