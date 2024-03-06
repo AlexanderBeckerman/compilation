@@ -60,7 +60,7 @@ public class AST_STMT_ACCESS extends AST_STMT
 			access.SerialNumber);
 	}
 
-	public TYPE SemantMe(TYPE func_type){
+	public TYPE SemantMe(TYPE_FUNCTION func_type){
 		return access.SemantMe();
 	}
 }

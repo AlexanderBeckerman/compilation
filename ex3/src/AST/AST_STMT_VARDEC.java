@@ -57,7 +57,7 @@ public class AST_STMT_VARDEC extends AST_STMT
         AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, varDec.SerialNumber);
     }
 
-    public TYPE SemantMe(){
+    public TYPE SemantMe(TYPE_FUNCTION func_type){
         return varDec.SemantMe(false, null);
     }
 }

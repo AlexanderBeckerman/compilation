@@ -43,8 +43,13 @@ public class AST_FUNC_NODE extends AST_Node
         else if(arg_t instanceof TYPE_CLASS){ // type func(Person p){...}
             finalType = new TYPE_CLASS_INSTANCE(id, (TYPE_CLASS)arg_t);
         }
+
+        else if((arg_t instanceof TYPE_STRING) || (arg_t instanceof TYPE_INT))
+        {
+            finalType = new TYPE_PRIMITIVE_INSTANCE(id, arg_t);
+        }
         table.enter(id, finalType);
-        return finalType;
+        return arg_t;
 
     }
 }

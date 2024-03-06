@@ -63,7 +63,7 @@ public class AST_STMT_LIST extends AST_Node
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
 	
-	public TYPE SemantMe(TYPE func_type)
+	public TYPE SemantMe(TYPE_FUNCTION func_type)
 	{
 		if (head != null) head.SemantMe(func_type);
 		if (tail != null) tail.SemantMe(func_type);
