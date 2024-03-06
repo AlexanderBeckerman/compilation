@@ -53,29 +53,19 @@ public class AST_FUNC_DEC extends AST_Node
 	{
 		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
 		TYPE_FUNCTION func_type;
-		TYPE return_type;
 		TYPE_LIST func_params = null;
 
 		TYPE find_type = table.find(id);
-		if (find_type != null && table.getScopeDepth() == 0){
-			// if we are in the global scope and class/function/something with same name already exists
-			throw new LineError(lineNumber);
-		}
-		if (find_type != null && inClass && table.checkScopeDec(id)){
+		if (table.checkScopeDec(id)){
 			// if we are a class method and a variable/func/something with same name already exists
 			throw new LineError(lineNumber);
 		}
-		if (table.getScopeDepth() != 0 && !inClass){
-			// func declarations only allowed in global scope or as class methods
-			throw new LineError(lineNumber);
-		}
-		return_type = t.SemantMe();
-		find_type = table.find(return_type.name);
+		find_type = t.SemantMe();
 		if (find_type == null || (!(find_type instanceof TYPE_CLASS) && !(find_type instanceof TYPE_ARRAY) && !(find_type instanceof TYPE_INT) 
 			&& !(find_type instanceof TYPE_STRING) && !(find_type instanceof TYPE_VOID))){
 				throw new LineError(lineNumber); // if no such return type exists or its not an array/class/int/string/void we return error
 			}
-		func_type = new TYPE_FUNCTION(return_type, id, null);
+		func_type = new TYPE_FUNCTION(find_type, id, null);
 		table.enter(id, func_type);
 		table.beginScope();
 		if (fl != null){

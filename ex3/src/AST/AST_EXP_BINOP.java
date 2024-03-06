@@ -31,7 +31,6 @@ public class AST_EXP_BINOP extends AST_EXP
 		this.left = left;
 		this.right = right;
 		this.OP = OP;
-		this.line_number = line_number;
 	}
 	
 	/*************************************************/
