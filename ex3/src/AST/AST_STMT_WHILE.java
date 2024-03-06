@@ -30,4 +30,16 @@ public class AST_STMT_WHILE extends AST_STMT
 		table.endScope();
 		return null;
 	}
+
+	public void PrintMe(){
+        System.out.print("AST NODE WHILE STMT\n");
+        cond.PrintMe();
+        body.PrintMe();
+
+        AST_GRAPHVIZ.getInstance().logNode(
+                SerialNumber,
+                "WHILE\n");
+        AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, cond.SerialNumber);
+        AST_GRAPHVIZ.getInstance().logEdge(SerialNumber, body.SerialNumber);
+    }
 }
