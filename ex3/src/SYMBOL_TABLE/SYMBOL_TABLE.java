@@ -20,74 +20,32 @@ import TYPES.*;
 /* SYMBOL TABLE */
 /****************/
 public class SYMBOL_TABLE
-{
-	private int hashArraySize = 9;
-	
+{	
 	/**********************************************/
 	/* The actual symbol table data structure ... */
 	/**********************************************/
-	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
-	private SYMBOL_TABLE_ENTRY top;
-	private int top_index = 0;
-	private int scope_depth;
-	private ArrayList<Map<String, TYPE>> scopeStack = new ArrayList<>(); // A stack of hash maps, at each point at run time the top of the stack (scopeStack[scopeStack.size() - 1] holds a map from the symbols defined in the scope to its fields.)
-
-	/**************************************************************/
-	/* A very primitive hash function for exposition purposes ... */
-	/**************************************************************/
-	private int hash(String s)
-	{
-		if (s.charAt(0) == 'l') {return 0;}
-		if (s.charAt(0) == 'm') {return 1;}
-		if (s.charAt(0) == 'r') {return 2;}
-		if (s.charAt(0) == 'i') {return 3;}
-		if (s.charAt(0) == 'd') {return 4;}
-		if (s.charAt(0) == 'k') {return 5;}
-		if (s.charAt(0) == 'f') {return 6;}
-		if (s.charAt(0) == 'S') {return 7;}
-		return 8;
-	}
+	/*
+	 *  A stack of hash maps, each map contains the mapping of a scope from symbols to their symbol table enteries according to the scope's declarations.
+	 * 	The higher a map is on the stack, the more inner is its scope, the maps are pushed and popped into and out of the stack with their beggining and ending,
+	 *  respectively.
+	 */
+	private ArrayList<Map<String, SYMBOL_TABLE_ENTRY>> scopeStack = new ArrayList<>();
+	public TYPE_CLASS cls; // This will be used by the ASTs to know what class are they defined at.
+	public int top_index = 0;
 
 	/****************************************************************************/
 	/* Enter a variable, function, class type or array type to the symbol table */
 	/****************************************************************************/
 	public void enter(String name,TYPE t)
-	{
-		/*************************************************/
-		/* [1] Compute the hash value for this new entry */
-		/*************************************************/
-		int hashValue = hash(name);
-
-		/******************************************************************************/
-		/* [2] Extract what will eventually be the next entry in the hashed position  */
-		/*     NOTE: this entry can very well be null, but the behaviour is identical */
-		/******************************************************************************/
-		SYMBOL_TABLE_ENTRY next = table[hashValue];
-	
-		/**************************************************************************/
-		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
-		/**************************************************************************/
-		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++);
-
-		/**********************************************/
-		/* [4] Update the top of the symbol table ... */
-		/**********************************************/
-		top = e;
+	{	
+		/* Prepare a new symbol table entry with name, type, next and prevtop */
+		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t, top_index++);
 		
-		/****************************************/
-		/* [5] Enter the new entry to the table */
-		/****************************************/
-		table[hashValue] = e;
-		
-		/**************************/
-		/* [6] Print Symbol Table */
-		/**************************/
+		/*  Print Symbol Table */
 		PrintMe();
 
-		/**********************************************************/
-		/* [7] Add the symbol to the map at the top of scopeStack */
-		/**********************************************************/
-		scopeStack.get(scopeStack.size() - 1).put(name, t);
+		/* Add the symbol to the map at the top of scopeStack */
+		scopeStack.get(scopeStack.size() - 1).put(name, e);
 	}
 
 	/***********************************************/
@@ -95,17 +53,28 @@ public class SYMBOL_TABLE
 	/***********************************************/
 	public TYPE find(String name)
 	{
-		SYMBOL_TABLE_ENTRY e;
-				
-		for (e = table[hash(name)]; e != null; e = e.next)
+		/*
+		 * The order of resolving is inner-most scope that is not global, then class members and functions and then global scope.
+		 */
+		for(int i = scopeStack.size() - 1; i == 0; i--)
 		{
-			if (name.equals(e.name))
-			{
-				return e.type;
+			if (scopeStack.get(i).containsKey(name)) {
+				return scopeStack.get(i).get(name).type;
 			}
 		}
-		
-		return null;
+
+		if (cls != null) {
+			TYPE temp;
+			temp = cls.findClassMethod(name);
+			if (temp == null) {
+				temp = cls.findClassVariable(name);
+			}
+			if (temp != null) {
+				return temp;
+			}
+		}
+
+		return scopeStack.get(0).get(name).type;
 	}
 
 	/***************************************************************************/
@@ -113,60 +82,31 @@ public class SYMBOL_TABLE
 	/***************************************************************************/
 	public void beginScope()
 	{
-		/************************************************************************/
-		/* Though <SCOPE-BOUNDARY> entries are present inside the symbol table, */
-		/* they are not really types. In order to be able to debug print them,  */
-		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
-		/* class only contain their type name which is the bottom sign: _|_     */
-		/************************************************************************/
-		this.scope_depth++;
-		enter(
-			"SCOPE-BOUNDARY",
-			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
-
-		/*********************************************/
-		/* Print the symbol table after every change */
-		/*********************************************/
-		PrintMe();
-
 		/********************************************************************/
 		/* Add a new hashMap for the scope at the top of the scopeStack map */
 		/********************************************************************/
 		scopeStack.add(new HashMap<>());
+		
+		/*********************************************/
+		/* Print the symbol table after every change */
+		/*********************************************/
+		PrintMe();
 	}
 
 	/********************************************************************************/
-	/* end scope = Keep popping elements out of the data structure,                 */
-	/* from most recent element entered, until a <NEW-SCOPE> element is encountered */
+	/* pop the the scopeStak. 										                */
 	/********************************************************************************/
 	public void endScope()
 	{
-		/**************************************************************************/
-		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
-		/**************************************************************************/
-		this.scope_depth--;
-		while (top.name != "SCOPE-BOUNDARY")
-		{
-			table[top.index] = top.next;
-			top_index = top_index-1;
-			top = top.prevtop;
-		}
-		/**************************************/
-		/* Pop the SCOPE-BOUNDARY sign itself */		
-		/**************************************/
-		table[top.index] = top.next;
-		top_index = top_index-1;
-		top = top.prevtop;
+		/***********************************************/
+		/* Remove the map at the top of the scopeStack */
+		/***********************************************/
+		scopeStack.remove(scopeStack.size() - 1 );
 
 		/*********************************************/
 		/* Print the symbol table after every change */		
 		/*********************************************/
 		PrintMe();
-
-		/***********************************************/
-		/* Remove the map at the top of the scopeStack */
-		/***********************************************/
-		scopeStack.remove(scopeStack.size() - 1 );
 	}
 	
 	public static int n=0;
@@ -174,60 +114,54 @@ public class SYMBOL_TABLE
 	public void PrintMe()
 	{
 		int i=0;
-		int j=0;
 		String dirname="./output/";
 		String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
 
 		try
 		{
-			/*******************************************/
-			/* [1] Open Graphviz text file for writing */
-			/*******************************************/
+			/***************************************/
+			/* Open Graphviz text file for writing */
+			/***************************************/
 			PrintWriter fileWriter = new PrintWriter(dirname+filename);
 
-			/*********************************/
-			/* [2] Write Graphviz dot prolog */
-			/*********************************/
+			/*****************************/
+			/* Write Graphviz dot prolog */
+			/*****************************/
 			fileWriter.print("digraph structs {\n");
 			fileWriter.print("rankdir = LR\n");
 			fileWriter.print("node [shape=record];\n");
 
-			/*******************************/
-			/* [3] Write Hash Table Itself */
-			/*******************************/
+			/*********************/
+			/* Write list Itself */
+			/*********************/
 			fileWriter.print("hashTable [label=\"");
-			for (i=0;i<hashArraySize-1;i++) { fileWriter.format("<f%d>\n%d\n|",i,i); }
-			fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
+			for (i=0;i<scopeStack.size()-1;i++) { fileWriter.format("<f%d>\n%d\n|",i,i); }
+			fileWriter.format("<f%d>\n%d\n\"];\n",scopeStack.size()-1,scopeStack.size()-1);
 		
-			/****************************************************************************/
-			/* [4] Loop over hash table array and print all linked lists per array cell */
-			/****************************************************************************/
-			for (i=0;i<hashArraySize;i++)
+			/* Go over scope stack and print all symbol table enteries per scope */
+			for(i = 0; i < scopeStack.size(); i++)
 			{
-				if (table[i] != null)
+				/*********************************************************/
+				/* Print hash table scopeStack.get(i) -> entry(i,0) edge */
+				/*********************************************************/
+				fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
+				
+				int j = 0;
+				for(SYMBOL_TABLE_ENTRY e : scopeStack.get(i).values())
 				{
-					/*****************************************************/
-					/* [4a] Print hash table array[i] -> entry(i,0) edge */
-					/*****************************************************/
-					fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
-				}
-				j=0;
-				for (SYMBOL_TABLE_ENTRY it=table[i];it!=null;it=it.next)
-				{
-					/*******************************/
-					/* [4b] Print entry(i,it) node */
-					/*******************************/
+					/*************************/
+					/* Print entry(i,j) node */
+					/*************************/
 					fileWriter.format("node_%d_%d ",i,j);
 					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
-						it.name,
-						it.type.name,
-						it.prevtop_index);
+						e.name,
+						e.type.name,
+						e.index);
 
-					if (it.next != null)
-					{
-						/***************************************************/
-						/* [4c] Print entry(i,it) -> entry(i,it.next) edge */
-						/***************************************************/
+					if (scopeStack.get(i).values().size() != j + 1) {
+						/**********************************************/
+						/* Print entry(i,it) -> entry(i,it.next) edge */
+						/**********************************************/
 						fileWriter.format(
 							"node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",
 							i,j,i,j+1);
@@ -264,26 +198,25 @@ public class SYMBOL_TABLE
 	{
 		if (instance == null)
 		{
-			/*******************************/
-			/* [0] The instance itself ... */
-			/*******************************/
+			/***************************/
+			/* The instance itself ... */
+			/***************************/
 			instance = new SYMBOL_TABLE();
-			instance.scope_depth = 0;
 
 			instance.scopeStack.add(new HashMap<>());
-			/*****************************************/
-			/* [1] Enter primitive types int, string */
-			/*****************************************/
+			/*************************************/
+			/* Enter primitive types int, string */
+			/*************************************/
 			instance.enter("int",   TYPE_INT.getInstance());
 			instance.enter("string",TYPE_STRING.getInstance());
 
-			/*************************************/
-			/* [2] How should we handle void ??? */
-			/*************************************/
+			/*****************************/
+			/* How should we handle void */
+			/*****************************/
 			instance.enter("void", TYPE_VOID.getInstance());
-			/***************************************/
-			/* [3] Enter library function PrintInt */
-			/***************************************/
+			/***********************************/
+			/* Enter library function PrintInt */
+			/***********************************/
 			instance.enter(
 				"PrintInt",
 				new TYPE_FUNCTION(
@@ -305,7 +238,7 @@ public class SYMBOL_TABLE
 	}
 
 	public int getScopeDepth(){
-		return scope_depth;
+		return scopeStack.size() - 1;
 	}
 
 	/**
