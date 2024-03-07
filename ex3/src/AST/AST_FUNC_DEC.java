@@ -58,11 +58,13 @@ public class AST_FUNC_DEC extends AST_Node
 		TYPE find_type = table.find(id);
 		if (table.checkScopeDec(id)){
 			// if we are a class method and a variable/func/something with same name already exists
+			System.out.format(">> ERROR [%d:%d] function name %s already exists in scope!\n", lineNumber, charPos, id);
 			throw new LineError(lineNumber);
 		}
 		find_type = t.SemantMe();
 		if (find_type == null || (!(find_type instanceof TYPE_CLASS) && !(find_type instanceof TYPE_ARRAY) && !(find_type instanceof TYPE_INT) 
 			&& !(find_type instanceof TYPE_STRING) && !(find_type instanceof TYPE_VOID))){
+				System.out.format(">> ERROR [%d:%d] invalid or non existing function type!\n", lineNumber, charPos);
 				throw new LineError(lineNumber); // if no such return type exists or its not an array/class/int/string/void we return error
 			}
 		func_type = new TYPE_FUNCTION(find_type, id, null);
@@ -80,10 +82,12 @@ public class AST_FUNC_DEC extends AST_Node
 			TYPE prev_method = class_type.findClassMethod(id);
 			if (prev_var != null){
 				// defining a method that shadows a previously defined variable is illegal
+				System.out.format(">> ERROR [%d:%d] trying to define a method that shadows a variable with the same name - %s!\n", lineNumber, charPos, id);
 				throw new LineError(lineNumber);
 			}
 			if (prev_method != null && prev_method instanceof TYPE_FUNCTION && !TYPE_FUNCTION.isOverriding((TYPE_FUNCTION)prev_method, func_type)){
 				// if we have a previously defined method with the same name and the new function isnt overriding but overloading
+				System.out.format(">> ERROR [%d:%d]  previously defined method with the same name and the new function isnt overriding but overloading\n", lineNumber, charPos);
 				throw new LineError(lineNumber);
 			}
 		}

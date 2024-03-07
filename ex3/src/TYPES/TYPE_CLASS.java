@@ -34,10 +34,11 @@ public class TYPE_CLASS extends TYPE_TYPE
 			TYPE_LIST curr_attrs = curr_class.variables;
 			while (curr_attrs != null)
 			{ // loop over the attributes of the current class we are searching
-				TYPE curr_attr = curr_attrs.head;
+				TYPE_CLASS_VAR_DEC curr_attr = (TYPE_CLASS_VAR_DEC) curr_attrs.head;
+				
 				if (curr_attr != null && curr_attr.name.equals(attrName))
 				{
-					return ((TYPE_CLASS_VAR_DEC)curr_attr).t; // return the type of the found attribute
+					return curr_attr; // return the type of the found attribute
 				}
 				curr_attrs = curr_attrs.tail;	
 			}

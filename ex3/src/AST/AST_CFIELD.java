@@ -47,7 +47,7 @@ public class AST_CFIELD extends AST_Node
     
     public TYPE SemantMe(TYPE_CLASS class_type){
         if (varDec != null){
-            return varDec.SemantMe(true, class_type);
+            return new TYPE_CLASS_VAR_DEC(varDec.SemantMe(true, class_type), varDec.id);
         }
         else{
             return funcDec.SemantMe(true, class_type); // pass the class of the cfield so we can check method overriding/overloading

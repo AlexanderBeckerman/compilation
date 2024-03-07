@@ -73,7 +73,6 @@ public class AST_CFIELD_LIST extends AST_Node
             if (head.funcDec != null)
             {
                 class_type.methods.append(head_type);
-                // table.enter(head_type.name, head_type);
             }
             else if (head.varDec != null)
             {

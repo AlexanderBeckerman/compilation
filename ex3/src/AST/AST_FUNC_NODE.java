@@ -35,6 +35,7 @@ public class AST_FUNC_NODE extends AST_Node
         SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
         if (table.find(arg_t.name) == null || arg_t instanceof TYPE_FUNCTION || arg_t instanceof TYPE_CLASS_INSTANCE || arg_t instanceof TYPE_ARRAY_INSTANCE){
             // if the type doesnt exist
+            System.out.format(">> ERROR [%d:%d] could not find type with id %s!\n", lineNumber, charPos, id);
             throw new LineError(lineNumber);
         }
         if (arg_t instanceof TYPE_ARRAY){ // type func(int[] arr){...}
