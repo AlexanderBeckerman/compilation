@@ -2,6 +2,7 @@ package AST;
 
 import SYMBOL_TABLE.SYMBOL_TABLE;
 import TYPES.*;
+
 import MAIN.*;
 
 public class AST_VAR_DEC extends AST_Node{
@@ -80,7 +81,7 @@ public class AST_VAR_DEC extends AST_Node{
 
         if (t == TYPE_VOID.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] You cannot declare a variable as void.\n", lineNumber, charPos);
+			System.out.format(">> ERROR [%d:%d] You cannot declare a variable as void type.\n", lineNumber, charPos);
             throw new LineError(this.lineNumber);
 		}
 
@@ -95,10 +96,6 @@ public class AST_VAR_DEC extends AST_Node{
                 System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.lineNumber, this.charPos);
                 throw new LineError(this.lineNumber);
             }
-            if (class_type.findClassMethod(id) != null || class_type.findClassVariable(id) != null){
-                System.out.format(">> ERROR [%d:%d] variable name already exists in class or in father class.\n", this.lineNumber, this.charPos);
-                throw new LineError(this.lineNumber);
-            }
         }
 
         TYPE assignedType = null;
@@ -110,9 +107,19 @@ public class AST_VAR_DEC extends AST_Node{
             assignedType = newExp.SemantMe();
         }
 
-        if ((assignedType != null) && (!TYPE.areMatchingTypes(assignedType, t))) {
-            System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType, this.t.type);
-            throw new LineError(this.lineNumber);
+
+        // Type matching check.
+        if (assignedType != null) {
+            if ((t instanceof TYPE_ARRAY) && newExp != null) {
+                if (!(assignedType instanceof TYPE_ARRAY) || !TYPE.areMatchingTypes(((TYPE_ARRAY) assignedType).dataType, ((TYPE_ARRAY) t).dataType)){
+                    System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal via new.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
+                    throw new LineError(this.lineNumber);
+                }
+            }
+            else if(!TYPE.areMatchingTypes(assignedType, t)) {
+                System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
+                throw new LineError(this.lineNumber);
+            }
         }
 
         /*

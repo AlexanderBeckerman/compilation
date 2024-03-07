@@ -69,9 +69,15 @@ public class AST_STMT_ASSIGN_NEWEXP extends AST_STMT
 		TYPE var_type = var.SemantMe();
 		TYPE exp_type = exp.SemantMe();
 
-		if (!TYPE.areMatchingTypes(exp_type, var_type)){
-			// Throw an error if var_type is not of type exp_type
-			throw new LineError(lineNumber);
+		if (var_type instanceof TYPE_ARRAY) {
+			if (!(exp_type instanceof TYPE_ARRAY) || !TYPE.areMatchingTypes(((TYPE_ARRAY) exp_type).dataType, ((TYPE_ARRAY) var_type).dataType)){
+				System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal via new.\n", this.lineNumber, this.charPos, exp_type.name, var_type.name);
+				throw new LineError(this.lineNumber);
+			}
+		}
+		else if(!TYPE.areMatchingTypes(exp_type, var_type)) {
+			System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, exp_type.name, var_type.name);
+			throw new LineError(this.lineNumber);
 		}
 		return null;
 	}
