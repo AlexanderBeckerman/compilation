@@ -86,6 +86,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		{
 			if (OP == 3 && ((AST_EXP_INT)right).value == 0) // division by zero
 			{
+				System.out.format(">> ERROR [%d:%d] division by zero!\n", lineNumber, charPos);
 				throw new LineError(lineNumber);
 			}
 			return TYPE_INT.getInstance(); // binary operation between two ints
@@ -96,6 +97,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (OP == 6 && (TYPE.areMatchingTypes(t1, t2) || TYPE.areMatchingTypes(t2, t1))){
 			return TYPE_INT.getInstance();
 		}
+		System.out.format(">> ERROR [%d:%d] invalid binop=%d operation between %s and %s\n", lineNumber, charPos,this.OP ,t1.name, t2.name);
 		throw new LineError(lineNumber);
 
 	}

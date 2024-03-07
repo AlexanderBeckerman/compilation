@@ -51,12 +51,14 @@ public class AST_CLASS_DEC extends AST_Node{
         TYPE_CLASS class_type;
 
         if (table.getScopeDepth() != 0 || table.find(id1) != null){
+            System.out.format(">> ERROR [%d:%d] trying to declare %s class not in global scope or such class name already exists!\n", lineNumber, charPos, this.id1);
             throw new LineError(lineNumber); // if not global scope or we already have class with same name
         }
         if (id2 != null)
         {
             father_type = table.find(id2);
             if (father_type == null || !(father_type instanceof TYPE_CLASS)){
+                System.out.format(">> ERROR [%d:%d] didnt find a class with name %s\n", lineNumber, charPos, this.id2);
                 throw new LineError(lineNumber); // no such extendable class exists or its not a class
             }
             father_class_type = (TYPE_CLASS)father_type;

@@ -107,6 +107,7 @@ public class AST_VAR_DEC extends AST_Node{
             assignedType = newExp.SemantMe();
         }
 
+
         // Type matching check.
         if (assignedType != null) {
             if ((t instanceof TYPE_ARRAY) && newExp != null) {

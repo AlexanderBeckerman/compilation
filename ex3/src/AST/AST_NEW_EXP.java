@@ -53,16 +53,19 @@ public class AST_NEW_EXP extends AST_Node {
 
         if (this_type == null){
             // if no such type exists
+            System.out.format(">> ERROR [%d:%d] could not find type %s\n", lineNumber, charPos, this.type.type);
             throw new LineError(lineNumber);
         }
        if (exp == null){
             if (!(this_type instanceof TYPE_CLASS)){
+                System.out.format(">> ERROR [%d:%d] type %s is not a class instance\n", lineNumber, charPos, this.type.type);
                 throw new LineError(lineNumber);
             }
        }
         else
         {
             if (exp.SemantMe() != TYPE_INT.getInstance() || (exp instanceof AST_EXP_INT && ((AST_EXP_INT)exp).value <= 0)){
+                System.out.format(">> ERROR [%d:%d] trying to create a new array with index less than equal to zero %s\n", lineNumber, charPos);
                 throw new LineError(lineNumber);
             }
             return new TYPE_ARRAY(null, this_type);
