@@ -81,12 +81,6 @@ public class AST_VAR_SUBSCRIPT extends AST_VAR
             throw new LineError(this.lineNumber);
         }
 
-		// If the index refrenced is constant it should not be negative.
-		if ((subscript instanceof AST_EXP_INT) && (((AST_EXP_INT)subscript).value < MIN_INDX)) {
-            System.out.format(">> ERROR [%d:%d] Refrencing an array cell by a negative value.\n", this.lineNumber, this.charPos);
-            throw new LineError(this.lineNumber);
-        }
-
 		// Returning the static type of the field.
 		return ((TYPE_ARRAY) varType).dataType;
 	}
