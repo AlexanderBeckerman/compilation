@@ -48,33 +48,49 @@ public class SYMBOL_TABLE
 		scopeStack.get(scopeStack.size() - 1).put(name, e);
 	}
 
-	/***********************************************/
-	/* Find the inner-most scope element with name */
-	/***********************************************/
+	/* Find the inner-most scope element by the relevent declaration. */
 	public TYPE find(String name)
 	{
+		
 		/*
 		 * The order of resolving is inner-most scope that is not global, then class members and functions and then global scope.
 		 */
-		for(int i = scopeStack.size() - 1; i == 0; i--)
+		for(int i = (scopeStack.size() - 1); i > 0; i--)
 		{
 			if (scopeStack.get(i).containsKey(name)) {
 				return scopeStack.get(i).get(name).type;
 			}
-		}
+		}    
 
 		if (cls != null) {
 			TYPE temp;
 			temp = cls.findClassMethod(name);
 			if (temp == null) {
 				temp = cls.findClassVariable(name);
+				if (temp != null) {
+					if (temp instanceof TYPE_CLASS)
+					{
+						temp = new TYPE_CLASS_INSTANCE(name, (TYPE_CLASS) temp);
+					}
+					else if(temp instanceof TYPE_ARRAY)
+					{
+						temp = new TYPE_ARRAY_INSTANCE(name, (TYPE_ARRAY) temp);
+					}
+					else
+					{
+						temp = new TYPE_PRIMITIVE_INSTANCE(name, temp);
+					}
+				}
 			}
 			if (temp != null) {
 				return temp;
 			}
 		}
 
-		return scopeStack.get(0).get(name).type;
+		if (scopeStack.get(0).containsKey(name)) {
+			return scopeStack.get(0).get(name).type;
+		}
+		return null;
 	}
 
 	/***************************************************************************/
@@ -141,10 +157,12 @@ public class SYMBOL_TABLE
 			/* Go over scope stack and print all symbol table enteries per scope */
 			for(i = 0; i < scopeStack.size(); i++)
 			{
-				/*********************************************************/
-				/* Print hash table scopeStack.get(i) -> entry(i,0) edge */
-				/*********************************************************/
-				fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
+				if (scopeStack.get(i).size() != 0) {
+					/*********************************************************/
+					/* Print hash table scopeStack.get(i) -> entry(i,0) edge */
+					/*********************************************************/
+					fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);	
+				}
 				
 				int j = 0;
 				for(SYMBOL_TABLE_ENTRY e : scopeStack.get(i).values())
