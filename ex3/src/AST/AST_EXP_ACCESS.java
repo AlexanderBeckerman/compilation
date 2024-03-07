@@ -57,6 +57,6 @@ public class AST_EXP_ACCESS extends AST_EXP
 	}
 
 	public TYPE SemantMe(){
-		return access.SemantMe(false);
+		return access.SemantMe();
 	}
 }
