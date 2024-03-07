@@ -98,6 +98,7 @@ public class AST_VAR_DEC extends AST_Node{
             }
             if ((class_type.findClassMethod(id) != null) || (class_type.findClassVariable(id) != null)) {
                 System.out.format(">> ERROR [%d:%d] variable name %s already exists in class or in father class.\n", this.lineNumber, this.charPos, id);
+                throw new LineError(this.lineNumber-1);
             }
         }
 
