@@ -38,7 +38,7 @@ public class TYPE_CLASS extends TYPE_TYPE
 				
 				if (curr_attr != null && curr_attr.name.equals(attrName))
 				{
-					return curr_attr; // return the type of the found attribute
+					return curr_attr.t; // return the type of the found attribute
 				}
 				curr_attrs = curr_attrs.tail;	
 			}
@@ -58,7 +58,7 @@ public class TYPE_CLASS extends TYPE_TYPE
 				TYPE_FUNCTION curr_attr = (TYPE_FUNCTION) curr_attrs.head;
 				if (curr_attr != null && curr_attr.name.equals(attrName))
 				{
-					return ((TYPE_FUNCTION)curr_attr).returnType; // return the type of the found attribute
+					return ((TYPE_FUNCTION)curr_attr); // return the type of the found attribute
 				}
 				curr_attrs = curr_attrs.tail;	
 			}

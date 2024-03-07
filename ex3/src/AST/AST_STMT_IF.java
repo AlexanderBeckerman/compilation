@@ -8,11 +8,12 @@ public class AST_STMT_IF extends AST_STMT
 {
 	public AST_EXP cond;
 	public AST_STMT_LIST body;
+	private int ln;
 
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body)
+	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -21,6 +22,7 @@ public class AST_STMT_IF extends AST_STMT
 
 		this.cond = cond;
 		this.body = body;
+		this.ln = line;
 	}
 
 	/*************************************************/
@@ -60,8 +62,8 @@ public class AST_STMT_IF extends AST_STMT
 		/****************************/
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] if condition must be an int.\n", this.lineNumber, this.charPos);
-			throw new LineError(lineNumber);
+			System.out.format(">> ERROR [%d:%d] if condition must be an int.\n", this.ln, this.charPos);
+			throw new LineError(this.ln);
 		}
 		SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
 		/*************************/

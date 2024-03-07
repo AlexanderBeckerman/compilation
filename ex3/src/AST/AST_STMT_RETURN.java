@@ -57,20 +57,20 @@ public class AST_STMT_RETURN extends AST_STMT
 
 		if (func_type == null){
 			System.out.format(">> ERROR [%d:%d] return not inside a function\n", lineNumber, charPos);
-			throw new LineError(lineNumber); // return not inside a function
+			throw new LineError(lineNumber-1); // return not inside a function
 		}
 		if (exp == null)
 		{ // if we have "return;""
 			if (!(func_type.returnType.name.equals("void"))){
 				System.out.format(">> ERROR [%d:%d] return void not inside a function with type void\n", lineNumber, charPos);
-				throw new LineError(lineNumber);
+				throw new LineError(lineNumber-1);
 			}
 		}
 		else{
 			TYPE exp_type = exp.SemantMe();
 			if (!TYPE.areMatchingTypes(exp_type, func_type.returnType)){
 				System.out.format(">> ERROR [%d:%d] return of type %s inside a func with type %s\n", lineNumber, charPos, exp_type.name, func_type.returnType.name);
-				throw new LineError(lineNumber);
+				throw new LineError(lineNumber-1);
 			}
 		}
 		return null;

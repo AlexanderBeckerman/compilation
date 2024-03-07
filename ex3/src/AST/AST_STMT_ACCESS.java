@@ -61,6 +61,6 @@ public class AST_STMT_ACCESS extends AST_STMT
 	}
 
 	public TYPE SemantMe(TYPE_FUNCTION func_type){
-		return access.SemantMe();
+		return access.SemantMe(true);
 	}
 }
