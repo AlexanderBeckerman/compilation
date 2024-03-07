@@ -79,7 +79,7 @@ public class AST_ACCESS extends AST_Node
 
     }
 
-    public TYPE SemantMe(){
+    public TYPE SemantMe(boolean fromSTMT){
         SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
         TYPE_LIST expected_args;
         TYPE_LIST given_args;
@@ -93,18 +93,24 @@ public class AST_ACCESS extends AST_Node
             if( id_type == null || !(id_type instanceof TYPE_FUNCTION))
             {
                 System.out.format(">> ERROR [%d:%d] id_type is null or not a function\n", lineNumber, charPos);
-                throw new LineError(lineNumber);
+                throwError(fromSTMT);
             }
             func_type = (TYPE_FUNCTION) id_type;
             expected_args = func_type.params;
+
+            if (expected_args == null){
+                if (expressions == null){
+                    return func_type.returnType;
+                }
+            }
             if ((expected_args != null && expressions == null) || (expected_args == null && expressions != null)){
                 System.out.format(">> ERROR [%d:%d] expected args is empty and expressions are not or the opposite\n", lineNumber, charPos);
-                throw new LineError(lineNumber); // Function with name id expects arguments but none were given
+                throwError(fromSTMT); // Function with name id expects arguments but none were given
             }
             given_args = (TYPE_LIST) expressions.SemantMe(); // EXP_LIST SemantMe will return a list of the function argument types
             if (!TYPE_LIST.compareLists(given_args, expected_args)){ // check if the given arguments match the expected arguments to the func
                 System.out.format(">> ERROR [%d:%d] different given and expected arguments to function %s\n", lineNumber, charPos, id);
-                throw new LineError(lineNumber);
+                throwError(fromSTMT);
             }
         }
         else // else its a class function call
@@ -112,27 +118,45 @@ public class AST_ACCESS extends AST_Node
             var_type = var.SemantMe();
             if (var_type == null || !(var_type instanceof TYPE_CLASS)){
                 System.out.format(">> ERROR [%d:%d] could not find given var or its not a class!\n", lineNumber, charPos);
-                throw new LineError(lineNumber); // if the given var isnt declared yet or is not a class instance
+                throwError(fromSTMT); // if the given var isnt declared yet or is not a class instance
             }
             func_type = (TYPE_FUNCTION)(((TYPE_CLASS)var_type).findClassMethod(id));
             if (func_type == null || !(func_type instanceof TYPE_FUNCTION)){
                 System.out.format(">> ERROR [%d:%d] could not find a matching method inside the given class instance\n", lineNumber, charPos);
-                throw new LineError(lineNumber); // could not find function or is not a function
+                throwError(fromSTMT); // could not find function or is not a function
             }
             expected_args = func_type.params;
+
+            if (expected_args == null){
+                if (expressions == null){
+                    return func_type.returnType;
+                }
+            }
+
             if ((expected_args != null && expressions == null) || (expected_args == null && expressions != null)){
                 System.out.format(">> ERROR [%d:%d] expected args is empty and expressions are not or the opposite\n", lineNumber, charPos);
-                throw new LineError(lineNumber); // Function with name id expects arguments but none were given
+                throwError(fromSTMT); // Function with name id expects arguments but none were given
             }
+
             given_args = (TYPE_LIST) expressions.SemantMe(); // EXP_LIST SemantMe will return a list of the function argument types
             if (!TYPE_LIST.compareLists(given_args, expected_args)){ // check if the given arguments match the expected arguments to the func
                 System.out.format(">> ERROR [%d:%d] different given and expected arguments to function %s\n", lineNumber, charPos, id);
-                throw new LineError(lineNumber);
+                throwError(fromSTMT);
             }
         }   
 
                
         return func_type.returnType;
+    }
+
+    private void throwError(boolean fromSTMT)
+    {
+        if (fromSTMT){
+            throw new LineError(lineNumber-1);
+        }
+        else{
+            throw new LineError(lineNumber);
+        }
     }
 
 }

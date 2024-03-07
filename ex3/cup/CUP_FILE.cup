@@ -176,12 +176,12 @@ funcList    ::=     funcNode:fn COMMA funcList:fl    {: RESULT = new AST_FUNC_LI
                     | funcNode:fn                    {: RESULT = new AST_FUNC_LIST(fn, null);   :}
                     ;
 
-funcDec     ::=     type:t ID:name LPAREN RPAREN LBRACE stmtList:sl RBRACE               {: RESULT = new AST_FUNC_DEC(t,name,sl);    :}
-                    | type:t ID:name LPAREN funcList:fl RPAREN LBRACE stmtList:sl RBRACE {: RESULT = new AST_FUNC_DEC(t,name,fl,sl); :}
+funcDec     ::=     type:t ID:name LPAREN RPAREN LBRACE stmtList:sl RBRACE               {: RESULT = new AST_FUNC_DEC(t,name,sl, t.lineNumber);    :}
+                    | type:t ID:name LPAREN funcList:fl RPAREN LBRACE stmtList:sl RBRACE {: RESULT = new AST_FUNC_DEC(t,name,fl,sl, t.lineNumber); :}
                     ;
 
-classDec    ::=     CLASS ID:name LBRACE cFieldList:cfl RBRACE                     {: RESULT = new AST_CLASS_DEC(name, cfl); :}
-                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cFieldList:cfl RBRACE {: RESULT = new AST_CLASS_DEC(name1, name2, cfl); :}
+classDec    ::=     CLASS ID:name LBRACE cFieldList:cfl RBRACE                     {:  RESULT = new AST_CLASS_DEC(name, cfl, nameleft+1); :}
+                    | CLASS ID:name1 EXTENDS ID:name2 LBRACE cFieldList:cfl RBRACE {:  RESULT = new AST_CLASS_DEC(name1, name2, cfl, name1left+1); :}
                     ;
 
 stmtList	::=		stmt:s	stmtList:l		{: RESULT = new AST_STMT_LIST(s,l);    :}
@@ -202,8 +202,8 @@ access		::=		ID:i LPAREN RPAREN								{: RESULT = new AST_ACCESS(i, null, null)
 					
 stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_EXP(v,e);    :}
 					| var:v ASSIGN newExp:e SEMICOLON							{: RESULT = new AST_STMT_ASSIGN_NEWEXP(v,e); :}
-					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE		{: RESULT = new AST_STMT_IF(cond, body);     :}
-					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body);   :}
+					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE		{: RESULT = new AST_STMT_IF(cond, body, cond.lineNumber);     :}
+					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body, cond.lineNumber);   :}
 					| varDec:v													{: RESULT = new AST_STMT_VARDEC(v);          :}
 					| access:a SEMICOLON										{: RESULT = new AST_STMT_ACCESS(a);          :}
 					| RETURN SEMICOLON											{: RESULT = new AST_STMT_RETURN(null);       :}

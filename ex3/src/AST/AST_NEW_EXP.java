@@ -65,7 +65,7 @@ public class AST_NEW_EXP extends AST_Node {
         else
         {
             if (exp.SemantMe() != TYPE_INT.getInstance() || (exp instanceof AST_EXP_INT && ((AST_EXP_INT)exp).value <= 0)){
-                System.out.format(">> ERROR [%d:%d] trying to create a new array with index less than equal to zero %s\n", lineNumber, charPos);
+                System.out.format(">> ERROR [%d:%d] trying to create a new array with index less than equal to zero\n", lineNumber, charPos);
                 throw new LineError(lineNumber);
             }
             return new TYPE_ARRAY(null, this_type);

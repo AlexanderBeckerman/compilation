@@ -59,16 +59,16 @@ public class AST_ARRAY_TYPE_DEF extends AST_Node{
 		if (table.getScopeDepth() != 0)
 		{
 			System.out.format(">> ERROR [%d:%d] trying to declare an array not in global scope!\n", lineNumber, charPos);
-			throw new LineError(lineNumber); // must be declared in global scope
+			throw new LineError(lineNumber-1); // must be declared in global scope
 		}
 		if (table.find(this.name) != null){
 			System.out.format(">> ERROR [%d:%d] %s different given and expected arguments to function %s\n", lineNumber, charPos, this.name);
-			throw new LineError(lineNumber); // array name already exists
+			throw new LineError(lineNumber-1); // array name already exists
 		}
 		TYPE arrayType = typy.SemantMe();
 		if (arrayType == null || arrayType instanceof TYPE_VOID || (arrayType instanceof TYPE_INSTANCE) || arrayType instanceof TYPE_FUNCTION){
 			System.out.format(">> ERROR [%d:%d] given array type is null or void or an instance or a function\n", lineNumber, charPos);
-			throw new LineError(lineNumber); // no such type or void array not allowed or is a function name or its an instance 
+			throw new LineError(lineNumber-1); // no such type or void array not allowed or is a function name or its an instance 
 		}
 		
 		table.enter(name, new TYPE_ARRAY(name, arrayType));
