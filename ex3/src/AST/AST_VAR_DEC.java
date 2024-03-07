@@ -96,6 +96,9 @@ public class AST_VAR_DEC extends AST_Node{
                 System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.lineNumber, this.charPos);
                 throw new LineError(this.lineNumber-1);
             }
+            if ((class_type.findClassMethod(id) != null) || (class_type.findClassVariable(id) != null)) {
+                System.out.format(">> ERROR [%d:%d] variable name %s already exists in class or in father class.\n", this.lineNumber, this.charPos, id);
+            }
         }
 
         TYPE assignedType = null;
@@ -137,6 +140,7 @@ public class AST_VAR_DEC extends AST_Node{
         }
         else if((t instanceof TYPE_STRING) || (t instanceof TYPE_INT))
         {
+            System.out.format("\nInserted %s of type %s\n", id, t);
             instanceType = new TYPE_PRIMITIVE_INSTANCE(id, t);
         }
     

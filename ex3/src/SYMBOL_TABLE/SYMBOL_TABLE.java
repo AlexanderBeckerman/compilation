@@ -30,6 +30,7 @@ public class SYMBOL_TABLE
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
 	private int scope_depth;
+	public TYPE_CLASS cls;
 	private ArrayList<Map<String, TYPE>> scopeStack = new ArrayList<>(); // A stack of hash maps, at each point at run time the top of the stack (scopeStack[scopeStack.size() - 1] holds a map from the symbols defined in the scope to its fields.)
 
 	/**************************************************************/
@@ -90,10 +91,38 @@ public class SYMBOL_TABLE
 		scopeStack.get(scopeStack.size() - 1).put(name, t);
 	}
 
+	public TYPE find(String name){
+		TYPE t = find_until_global_scope(name);
+		if (t != null)
+		{
+			return t;
+		}
+		else if (cls != null){
+			TYPE var = cls.findClassVariable(name);
+			TYPE ret_var = null;
+			if (var != null)
+			{
+				if (var instanceof TYPE_CLASS)
+				{
+					ret_var = new TYPE_CLASS_INSTANCE(name, (TYPE_CLASS) var);
+				}
+				else if(var instanceof TYPE_ARRAY)
+				{
+					ret_var = new TYPE_ARRAY_INSTANCE(name, (TYPE_ARRAY) var);
+				}
+				else if((var instanceof TYPE_STRING) || (var instanceof TYPE_INT))
+				{
+					ret_var = new TYPE_PRIMITIVE_INSTANCE(name, var);
+				}
+				return ret_var;
+			}
+		}
+		return find2(name);
+	}
 	/***********************************************/
 	/* Find the inner-most scope element with name */
 	/***********************************************/
-	public TYPE find(String name)
+	public TYPE find2(String name)
 	{
 		SYMBOL_TABLE_ENTRY e;
 				
@@ -108,6 +137,20 @@ public class SYMBOL_TABLE
 		return null;
 	}
 
+	public TYPE find_until_global_scope(String name)
+	{
+
+		SYMBOL_TABLE_ENTRY e = top;
+		for (e = top; e != null; e = e.prevtop)
+		{
+			if(e.name.equals("GLOBAL-SCOPE-BOUNDARY"))
+				return null;
+			if (name.equals(e.name))
+				return e.type;
+		}
+		return null;
+	}
+
 	/***************************************************************************/
 	/* begin scope = Enter the <SCOPE-BOUNDARY> element to the data structure  */
 	/***************************************************************************/
@@ -119,11 +162,17 @@ public class SYMBOL_TABLE
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
+		if (getScopeDepth() == 0){
+			enter(
+				"SCOPE-BOUNDARY",
+				new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
+		}
+		else{
+			enter(
+				"GLOBAL-SCOPE-BOUNDARY",
+				new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
+		}
 		this.scope_depth++;
-		enter(
-			"SCOPE-BOUNDARY",
-			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
-
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -145,7 +194,7 @@ public class SYMBOL_TABLE
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
 		/**************************************************************************/
 		this.scope_depth--;
-		while (top.name != "SCOPE-BOUNDARY")
+		while (top.name != "SCOPE-BOUNDARY" && top.name != "GLOBAL-SCOPE-BOUNDARY")
 		{
 			table[top.index] = top.next;
 			top_index = top_index-1;
@@ -269,6 +318,7 @@ public class SYMBOL_TABLE
 			/*******************************/
 			instance = new SYMBOL_TABLE();
 			instance.scope_depth = 0;
+			instance.cls = null;
 
 			instance.scopeStack.add(new HashMap<>());
 			/*****************************************/
