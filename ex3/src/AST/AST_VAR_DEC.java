@@ -81,24 +81,24 @@ public class AST_VAR_DEC extends AST_Node{
 
         if (t == TYPE_VOID.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] You cannot declare a variable as void type.\n", lineNumber, charPos);
-            throw new LineError(this.lineNumber-1);
+			System.out.format(">> ERROR [%d:%d] You cannot declare a variable as void type.\n", this.t.lineNumber, this.t.charPos);
+            throw new LineError(this.t.lineNumber);
 		}
 
 		if (SYMBOL_TABLE.getInstance().checkScopeDec(this.id)) // Check that id isn't redeclared in the scope.
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", lineNumber, charPos, id);
-            throw new LineError(this.lineNumber-1);
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n", this.t.lineNumber, this.t.charPos, id);
+            throw new LineError(this.t.lineNumber);
 		}
 
         if (inClass) { // Checking the class declaration rules.
             if (newExp != null || (exp != null && !(exp instanceof AST_EXP_INT || exp instanceof AST_EXP_STRING || exp instanceof AST_EXP_NIL))) {
-                System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.lineNumber, this.charPos);
-                throw new LineError(this.lineNumber-1);
+                System.out.format(">> ERROR [%d:%d] data member inside a class can be initialized only with a constant value.\n", this.t.lineNumber, this.t.charPos);
+                throw new LineError(this.t.lineNumber);
             }
             if ((class_type.findClassMethod(id) != null) || (class_type.findClassVariable(id) != null)) {
-                System.out.format(">> ERROR [%d:%d] variable name %s already exists in class or in father class.\n", this.lineNumber, this.charPos, id);
-                throw new LineError(this.lineNumber-1);
+                System.out.format(">> ERROR [%d:%d] variable name %s already exists in class or in father class.\n", this.t.lineNumber, this.t.charPos, id);
+                throw new LineError(this.t.lineNumber);
             }
         }
 
@@ -116,13 +116,13 @@ public class AST_VAR_DEC extends AST_Node{
         if (assignedType != null) {
             if ((t instanceof TYPE_ARRAY) && newExp != null) {
                 if (!(assignedType instanceof TYPE_ARRAY) || !TYPE.areMatchingTypes(((TYPE_ARRAY) assignedType).dataType, ((TYPE_ARRAY) t).dataType)){
-                    System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal via new.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
-                    throw new LineError(this.lineNumber-1);
+                    System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal via new.\n", this.t.lineNumber, this.t.charPos, assignedType.name, this.t.type);
+                    throw new LineError(this.t.lineNumber);
                 }
             }
             else if(!TYPE.areMatchingTypes(assignedType, t)) {
                 System.out.format(">> ERROR [%d:%d] assigment of %s to a %s is illegal.\n", this.lineNumber, this.charPos, assignedType.name, this.t.type);
-                throw new LineError(this.lineNumber-1);
+                throw new LineError(this.t.lineNumber);
             }
         }
 

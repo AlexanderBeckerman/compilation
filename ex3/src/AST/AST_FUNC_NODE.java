@@ -33,7 +33,11 @@ public class AST_FUNC_NODE extends AST_Node
         TYPE arg_t = t.SemantMe();
         TYPE finalType = arg_t;
         SYMBOL_TABLE table = SYMBOL_TABLE.getInstance();
-        if (table.find(arg_t.name) == null || arg_t instanceof TYPE_FUNCTION || arg_t instanceof TYPE_CLASS_INSTANCE || arg_t instanceof TYPE_ARRAY_INSTANCE){
+        if (table.checkScopeDec(id)) {
+            System.out.format(">> ERROR [%d:%d] %s is already declared in the scope!\n", lineNumber, charPos, id);
+            throw new LineError(lineNumber);
+        }
+        if (table.find(arg_t.name) == null || arg_t instanceof TYPE_FUNCTION || arg_t instanceof TYPE_INSTANCE || arg_t instanceof TYPE_VOID){
             // if the type doesnt exist
             System.out.format(">> ERROR [%d:%d] could not find type with id %s!\n", lineNumber, charPos, id);
             throw new LineError(lineNumber);

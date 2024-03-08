@@ -70,7 +70,7 @@ public class AST_STMT_ASSIGN_EXP extends AST_STMT
 		TYPE exp_type = exp.SemantMe();
 
 		if (!TYPE.areMatchingTypes(exp_type, var_type)){
-			throw new LineError(lineNumber-1);
+			throw new LineError(this.var.lineNumber);
 		}
 		return null;
 	}
