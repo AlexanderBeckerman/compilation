@@ -11,11 +11,11 @@ public class AST_STMT_RETURN extends AST_STMT
 	/* DATA MEMBERS */
 	/****************/
 	public AST_EXP exp;
-
+	public int ret_line;
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_RETURN(AST_EXP exp)
+	public AST_STMT_RETURN(int ret_line, AST_EXP exp)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -23,6 +23,7 @@ public class AST_STMT_RETURN extends AST_STMT
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
 		this.exp = exp;
+		this.ret_line = ret_line;
 	}
 
 	/************************************************************/
@@ -56,21 +57,21 @@ public class AST_STMT_RETURN extends AST_STMT
 	public TYPE SemantMe(TYPE_FUNCTION func_type){
 
 		if (func_type == null){
-			System.out.format(">> ERROR [%d:%d] return not inside a function\n", lineNumber, charPos);
-			throw new LineError(lineNumber-1); // return not inside a function
+			System.out.format(">> ERROR [%d:%d] return not inside a function\n", ret_line, charPos);
+			throw new LineError(ret_line); // return not inside a function
 		}
 		if (exp == null)
 		{ // if we have "return;""
 			if (!(func_type.returnType.name.equals("void"))){
-				System.out.format(">> ERROR [%d:%d] return void not inside a function with type void\n", lineNumber, charPos);
-				throw new LineError(lineNumber-1);
+				System.out.format(">> ERROR [%d:%d] return void not inside a function with type void\n", ret_line, charPos);
+				throw new LineError(ret_line);
 			}
 		}
 		else{
 			TYPE exp_type = exp.SemantMe();
 			if (!TYPE.areMatchingTypes(exp_type, func_type.returnType)){
-				System.out.format(">> ERROR [%d:%d] return of type %s inside a func with type %s\n", lineNumber, charPos, exp_type.name, func_type.returnType.name);
-				throw new LineError(lineNumber-1);
+				System.out.format(">> ERROR [%d:%d] return of type %s inside a func with type %s\n", ret_line, charPos, exp_type.name, func_type.returnType.name);
+				throw new LineError(ret_line);
 			}
 		}
 		return null;

@@ -121,6 +121,7 @@ non terminal AST_ARRAY_TYPE_DEF arrayTypedef;
 non terminal Integer BINOP;
 non terminal AST_EXP_LIST expList;
 non terminal AST_ACCESS access;
+non terminal AST_RETURN return;
 
 /***********************/
 /* OPERATOR PRECEDENCE */
@@ -206,8 +207,8 @@ stmt		::=		var:v ASSIGN exp:e SEMICOLON								{: RESULT = new AST_STMT_ASSIGN_E
 					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE	{: RESULT = new AST_STMT_WHILE(cond,body, cond.lineNumber);   :}
 					| varDec:v													{: RESULT = new AST_STMT_VARDEC(v);          :}
 					| access:a SEMICOLON										{: RESULT = new AST_STMT_ACCESS(a);          :}
-					| RETURN SEMICOLON											{: RESULT = new AST_STMT_RETURN(null);       :}
-					| RETURN exp:e SEMICOLON									{: RESULT = new AST_STMT_RETURN(e);          :}
+					| return:r SEMICOLON											{: RESULT = new AST_STMT_RETURN(rleft+1, null);       :}
+					| return:r exp:e SEMICOLON									{: RESULT = new AST_STMT_RETURN(rleft+1, e);          :}
 					;
 
 
@@ -253,3 +254,6 @@ cField      ::=     varDec:v                            {: RESULT = new AST_CFIE
 cFieldList  ::=     cField:c cFieldList:cl              {: RESULT = new AST_CFIELD_LIST(c, cl);   :}
                     | cField:c                          {: RESULT = new AST_CFIELD_LIST(c, null); :}
                     ;
+
+return 		::= 	RETURN 								{: RESULT = new AST_RETURN(); :}
+					;
